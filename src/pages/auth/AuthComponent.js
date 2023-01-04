@@ -3,6 +3,8 @@ import "./AuthComponent.css"
 import axios from "axios";
 import {BASIC_URL} from "../../links";
 
+//
+// export const AuthComponent = ({setToken}) => {
 
 export const AuthComponent = ({setToken}) => {
 
@@ -28,10 +30,10 @@ export const AuthComponent = ({setToken}) => {
                 }
             );
             console.log(response);
-            if (response.data.token !== '') {
-                console.log(response.data.token);
-                setToken(response.data.token)
-            }
+            window.localStorage.setItem('token', response.data.token);
+            setToken(response.data.token)
+            //token.current = response.data.token
+
         } catch (err) {
             if (!err?.response) {
                 console.log("No Server Response");
@@ -63,7 +65,7 @@ export const AuthComponent = ({setToken}) => {
                            onChange={e => setPassword(e.target.value)}
                     />
                 </div>
-                <button type="submit" className="btn btn-primary" >Submit</button>
+                <button type="submit" className="btn btn-dark" >Submit</button>
             </form>
         </div>
 
