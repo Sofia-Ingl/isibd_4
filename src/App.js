@@ -1,8 +1,10 @@
 import {Route, BrowserRouter, Routes, Navigate} from 'react-router-dom'
 import React, {useEffect, useState} from 'react'
 import {AuthComponent} from "./pages/auth/AuthComponent";
-import {MainComponent} from "./pages/home/MainComponent";
 import {Navbar} from "./pages/home/Navbar";
+import {MainComponent} from "./pages/home/MainComponent";
+import {CaseDetails} from "./pages/home/cases/CaseDetails";
+import {CasesList} from "./pages/home/cases/CasesList";
 
 function App() {
 
@@ -27,6 +29,8 @@ function App() {
 
                 <Routes>
                     <Route path={'/'} exact element={<MainComponent/>}/>
+                    <Route path={'/cases'} exact element={<CasesList token={token}/>}/>
+                    <Route path={'/cases/:id'} exact element={<CaseDetails token={token}/>}/>
                     <Route path="*" element={<Navigate from="*" to="/" /> } />
 
                 </Routes>
