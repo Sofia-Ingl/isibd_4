@@ -1,14 +1,26 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getById} from "../../services/NetworkService";
+import {getById, getRelationsById} from "../../services/NetworkService";
+import {PersonCard} from "../people/PersonList";
 
 export const CaseDetails = ({token})=> {
     let { id } = useParams();
     const [details, setDetails] = useState({})
+    const [participants, setParticipants] = useState([])
+    const [participantsActive, setParticipantsActive] = useState(false)
 
     const getCase = async ()=> {
         let lst = await getById("case", id, token)
         setDetails(lst)
+    }
+
+    const dealCaseParticipants = async ()=> {
+
+        if (participantsActive === false) {
+            let lst = await getRelationsById("case", id, "participants", token)
+            setParticipants(lst)
+        }
+        setParticipantsActive(!participantsActive)
     }
 
     useEffect(() => {
@@ -23,6 +35,8 @@ export const CaseDetails = ({token})=> {
             </div>
         );
     }
+
+
     return (
         <div className="container px-5">
             <div className="container w-75">
@@ -45,18 +59,17 @@ export const CaseDetails = ({token})=> {
                     Access level: {details.accessLvl}
                 </div>
             </div>
-            {/*<p>*/}
-            {/*    <button className="btn btn-dark" type="button" data-bs-toggle="collapse"*/}
-            {/*            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">*/}
-            {/*        Participants*/}
-            {/*    </button>*/}
-            {/*</p>*/}
-            {/*<div className="collapse" id="collapseExample">*/}
-            {/*    <div className="card card-body">*/}
-            {/*        Some placeholder content for the collapse component. This panel is hidden by default but revealed*/}
-            {/*        when the user activates the relevant trigger.*/}
-            {/*    </div>*/}
-            {/*</div>*/}
+            <div className="pt-2">
+                <button className="container bg-dark rounded text-light" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseParticipants" onClick={dealCaseParticipants}>
+                    Participants
+                </button>
+            </div>
+            <div className="collapse pt-1" id="collapseParticipants">
+                <div className="data-details card card-body overflow-auto">
+                    {participants.map((p, i) => <PersonCard key={i} personInfo={p}/>)}
+                </div>
+            </div>
             </div>
         </div>
     );

@@ -1,9 +1,9 @@
-import "./CasesList.css"
+import "./Cases.css"
 import {useEffect, useState} from "react";
 import {getAll} from "../../services/NetworkService";
 import {NavLink} from "react-router-dom";
 
-const CaseCard = ({caseInfo})=> {
+export const CaseCard = ({caseInfo})=> {
     return (
         <div className="card mb-4">
             <div className="card-header">
@@ -34,7 +34,7 @@ export const CasesList = ({token})=>{
 
     return (
         <div className="container p-4 border border-dark border-3 rounded bg-dark">
-            <div className="card-container p-4 border border-light border-3 rounded bg-dark">
+            <div className="card-container overflow-auto p-4 border border-light border-3 rounded bg-dark">
                 {/*<div className="card-container p-4 rounded bg-dark">*/}
                 {cases.map((c, i) => <CaseCard key={i} caseInfo={c}/>)}
             </div>
