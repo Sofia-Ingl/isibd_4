@@ -67,7 +67,7 @@ export const CaseDetails = ({token})=> {
             </div>
             <div className="collapse pt-1" id="collapseParticipants">
                 <div className="data-details card card-body overflow-auto">
-                    {participants.map((p, i) => <PersonCard key={i} personInfo={p}/>)}
+                    {participants.map((p, i) => <PersonCard key={i} personInfo={p} last={i === (participants.length - 1)}/>)}
                 </div>
             </div>
             </div>
