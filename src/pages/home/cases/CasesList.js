@@ -1,4 +1,4 @@
-import "./Cases.css"
+import "../../../App.css"
 import {useEffect, useState} from "react";
 import {getAll} from "../../services/NetworkService";
 import {NavLink} from "react-router-dom";

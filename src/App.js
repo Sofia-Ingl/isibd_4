@@ -5,6 +5,8 @@ import {Navbar} from "./pages/home/Navbar";
 import {MainComponent} from "./pages/home/MainComponent";
 import {CaseDetails} from "./pages/home/cases/CaseDetails";
 import {CasesList} from "./pages/home/cases/CasesList";
+import {PersonList} from "./pages/home/people/PersonList";
+import {OrganizationsList} from "./pages/home/organizations/OrganizationsList";
 
 function App() {
 
@@ -31,6 +33,9 @@ function App() {
                     <Route path={'/'} exact element={<MainComponent/>}/>
                     <Route path={'/cases'} exact element={<CasesList token={token}/>}/>
                     <Route path={'/cases/:id'} exact element={<CaseDetails token={token}/>}/>
+                    <Route path={'/people'} exact element={<PersonList token={token}/>}/>
+                    <Route path={'/organizations'} exact element={<OrganizationsList token={token}/>}/>
+                    {/*<Route path={'/people/:id'} exact element={<Per token={token}/>}/>*/}
                     <Route path="*" element={<Navigate from="*" to="/" /> } />
 
                 </Routes>

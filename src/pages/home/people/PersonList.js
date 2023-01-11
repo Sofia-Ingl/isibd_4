@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {getAll} from "../../services/NetworkService";
 import {NavLink} from "react-router-dom";
+import "../../../App.css"
 
 export const PersonCard = ({personInfo, last})=> {
     return (
@@ -9,12 +10,13 @@ export const PersonCard = ({personInfo, last})=> {
                 {personInfo.status}
             </div>
             <div className="card-body">
-                <h5 className="card-title">{(personInfo.name == null)? "[Unknown]": personInfo.name} | {(personInfo.alias == null)? "[No-Alias]": personInfo.alias} </h5>
-                <p className="card-text text-truncate">Citizenship: {personInfo.citizenship}</p>
-                <p className="card-text text-truncate">Address: {personInfo.address}</p>
-                <p className="card-text text-truncate">Birth date: {personInfo.birthDate}</p>
-                <p className="card-text text-truncate">Location: {personInfo.location}</p>
-                <p className="card-text">Sex: {personInfo.sex}</p>
+                <h5 className="card-title">{(personInfo.name == null)? "[Unknown]": personInfo.name} | {(personInfo.alias == null)? "[No-Alias]": `"${personInfo.alias}"`} </h5>
+                {/*<p className="card-text text-truncate">Citizenship: {personInfo.citizenship}</p>*/}
+                <p className="card-text text-truncate">Address/Location: {(personInfo.address  == null)?
+                    "[Unknown]": personInfo.address} / {(personInfo.location  == null)?
+                    "[Unknown]": personInfo.location}</p>
+                {/*<p className="card-text text-truncate">Location: {personInfo.location}</p>*/}
+                {/*<p className="card-text">Sex: {personInfo.sex}</p>*/}
                 <NavLink to={`/people/${personInfo.id}`} className="btn btn-dark">Details</NavLink>
             </div>
             <div className="card-footer">
@@ -45,11 +47,8 @@ export const PersonList = ({token})=>{
     }, [])
 
     return (
-        <div className="container p-4 border border-dark border-3 rounded bg-dark">
-            <div className="card-container overflow-auto p-4 border border-light border-3 rounded bg-dark">
-                {/*<div className="card-container p-4 rounded bg-dark">*/}
-                {/*{cases.map((c, i) => <CaseCard key={i} caseInfo={c}/>)}*/}
-            </div>
+        <div className="card-container overflow-auto p-4 border border-light border-3 rounded bg-dark">
+            {people.map((p, i) => <PersonCard key={i} personInfo={p} last={i === (people.length - 1)}/>)}
         </div>
 
     );
