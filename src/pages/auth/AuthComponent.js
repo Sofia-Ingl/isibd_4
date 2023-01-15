@@ -32,6 +32,9 @@ export const AuthComponent = ({setToken}) => {
             console.log(response);
             window.localStorage.setItem('token', response.data.token);
             setToken(response.data.token)
+            window.localStorage.setItem('employee_id', response.data.employee_id);
+            console.log("response.data.employee_id")
+            console.log(response.data.employee_id)
             //token.current = response.data.token
 
         } catch (err) {

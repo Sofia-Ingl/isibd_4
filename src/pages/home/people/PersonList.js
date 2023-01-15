@@ -3,6 +3,24 @@ import {getAll} from "../../services/NetworkService";
 import {NavLink} from "react-router-dom";
 import "../../../App.css"
 
+export const PersonUpdCard = ({personInfo, last})=> {
+    return (
+        <div className={`card ${(last === false)? "mb-4":""}`}>
+            <div className="card-header">
+                {personInfo.status}
+            </div>
+            <div className="card-body">
+                <h5 className="card-title">{(personInfo.name == null)? "[Unknown]": personInfo.name} | {(personInfo.alias == null)? "[No-Alias]": `"${personInfo.alias}"`} </h5>
+            </div>
+            {/*<div className="card-body">*/}
+            {/*    <h5 className="card-title">[AL: {caseInfo.accessLvl}] {caseInfo.name}</h5>*/}
+            {/*    <p className="card-text text-truncate">Description: {caseInfo.description}</p>*/}
+            {/*    <NavLink to={`/cases/${caseInfo.id}`} className="btn btn-dark">Details</NavLink>*/}
+            {/*</div>*/}
+        </div>
+    );
+}
+
 export const PersonCard = ({personInfo, last})=> {
     return (
         <div className={`card ${(last === false)? "mb-4":""}`}>

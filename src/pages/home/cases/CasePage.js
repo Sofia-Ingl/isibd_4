@@ -3,7 +3,7 @@ import {useContext} from "react";
 import {CasePageContext} from "./CasePageState";
 import {CaseUpdPage} from "./CaseUpdPage";
 
-export const CasePage = ()=> {
+export const CasePage = ({token})=> {
 
     const {updMode} = useContext(CasePageContext)
 
@@ -14,7 +14,7 @@ export const CasePage = ()=> {
         );
     }
     return (
-            <CaseUpdPage>
+            <CaseUpdPage token={token}>
             </CaseUpdPage>
         );
 

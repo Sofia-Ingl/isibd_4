@@ -15,6 +15,9 @@ export const CasePageState = ({children, token, id})=> {
     const [orgsActive, setOrgsActive] = useState(false)
     const [evidences, setEvidences] = useState([])
     const [evidencesActive, setEvidencesActive] = useState(false)
+    const [employees, setEmployees] = useState([])
+    const [employeesActive, setEmployeesActive] = useState(false)
+    const [userResponsible, setUserResponsible] = useState(false)
 
     // eslint-disable-next-line no-unused-vars
     const [updMode, setUpdMode] = useState(false)
@@ -61,8 +64,32 @@ export const CasePageState = ({children, token, id})=> {
         setEvidencesActive(!evidencesActive)
     }
 
+    const setEmployeeResponsibility = async ()=> {
+        let lst = await getRelationsById("case", id, "responsible_employees", token)
+        let isUserResponsible = false
+        let userEmployeeId = parseInt(window.localStorage.getItem('employee_id'))
+        for (const employee of lst) {
+            if (employee.id === userEmployeeId) {
+                isUserResponsible = true
+                break
+            }
+        }
+        setUserResponsible(isUserResponsible)
+    }
+
+    const dealCaseEmployees = async ()=> {
+
+        if (employeesActive === false) {
+            let lst = await getRelationsById("case", id, "responsible_employees", token)
+            setEmployees(lst)
+        }
+        setEmployeesActive(!employeesActive)
+    }
+
     useEffect(() => {
         getCase()
+        setEmployeeResponsibility()
+        //dealCaseEmployees()
         console.log(details)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -82,7 +109,9 @@ export const CasePageState = ({children, token, id})=> {
             participants, dealCaseParticipants,
             witnesses, dealCaseWitnesses,
             orgs, dealCaseOrganizations,
-            evidences, dealCaseEvidences
+            evidences, dealCaseEvidences,
+            employees, dealCaseEmployees,
+            userResponsible
         }}>
             {children}
         </CasePageContext.Provider>

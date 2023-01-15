@@ -3,6 +3,7 @@ import {OrganizationCard} from "../organizations/OrganizationsList";
 import {EvidenceCard} from "./EvidenceCard";
 import {useContext} from "react";
 import {CasePageContext} from "./CasePageState";
+import {EmployeeCard} from "../employee/EmployeeList";
 
 export const CaseDemoPage = ()=> {
 
@@ -10,7 +11,9 @@ export const CaseDemoPage = ()=> {
         participants, dealCaseParticipants,
         witnesses, dealCaseWitnesses,
         orgs, dealCaseOrganizations,
-        evidences, dealCaseEvidences} = useContext(CasePageContext)
+        evidences, dealCaseEvidences,
+        employees, dealCaseEmployees,
+        userResponsible} = useContext(CasePageContext)
 
     const updateCase = ()=> {
         setUpdMode(true)
@@ -19,7 +22,7 @@ export const CaseDemoPage = ()=> {
     return (
         <div className="container px-5">
             <div className="container w-75">
-                <button className="btn btn-light border-dark mb-2" type="button" onClick={updateCase}>
+                <button className="btn btn-light border-dark mb-2" type="button" onClick={updateCase} disabled={!userResponsible}>
                     Update
                 </button>
                 <div className="card">
@@ -87,6 +90,30 @@ export const CaseDemoPage = ()=> {
                         {evidences.map((e, i) => <EvidenceCard key={i} evidenceInfo={e} last={i === (evidences.length - 1)}/>)}
                     </div>
                 </div>
+
+                <div className="pt-2">
+                    <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseEmployees" onClick={dealCaseEmployees}>
+                        Responsible employees
+                    </button>
+                </div>
+                <div className="collapse pt-1" id="collapseEmployees">
+                    <div className="data-details card card-body overflow-auto">
+                        {employees.map((e, i) => <EmployeeCard key={i} employeeInfo={e} last={i === (employees.length - 1)}/>)}
+                    </div>
+                </div>
+
+                {/*<div className="card">*/}
+                {/*    <div className="card card-body border-dark border-1">*/}
+                {/*        <h5 className="card-title">Responsible employees</h5>*/}
+                {/*        <div className="overflow-auto p-4 border border-light border-3 rounded">*/}
+                {/*            /!*<div className="card-container p-4 rounded bg-dark">*!/*/}
+                {/*            {employees.map((e, i) => <EmployeeCard key={i} employeeInfo={e} last={i === (employees.length - 1)}/>)}*/}
+                {/*        </div>*/}
+
+                {/*    </div>*/}
+
+                {/*</div>*/}
 
             </div>
         </div>

@@ -7,7 +7,7 @@ export const CaseDetails = ({token})=> {
 
     return (
         <CasePageState id={id} token={token}>
-            <CasePage></CasePage>
+            <CasePage token={token}></CasePage>
         </CasePageState>
     );
 }
