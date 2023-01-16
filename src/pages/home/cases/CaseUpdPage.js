@@ -1,34 +1,148 @@
 import React, {useContext, useEffect, useState} from "react";
 import {CasePageContext} from "./CasePageState";
 import {PersonUpdCard} from "../people/PersonList";
-import {getAllExcept} from "../../services/NetworkService";
+import {addRelationsById, deleteRelationsById, getAllExcept, modifyById} from "../../services/NetworkService";
+import {OrganizationUpdCard} from "../organizations/OrganizationsList";
+import {IncidentUpdCard} from "../incidents/IncidentsList";
+import {ArticleUpdCard} from "../articles/ArticlesList";
+
+// eslint-disable-next-line
+const UpdAccordion = ({
+                          entityName,
+                          entityLst,
+                          dealEntityDeleteLstFunc,
+                          dealEntityAddLstFunc,
+                          potentialEntities,
+                          getAllExceptEntities,
+                          networkWrapper,
+                          EntityCard
+})=> {
+
+
+    return (
+    <div className="accordion mb-3" id={`accordion${entityName}`}>
+
+        <div className="accordion-item border-dark border-2">
+            <h2 className="accordion-header" id={`headingOne${entityName}`}>
+                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target={`#collapseOne${entityName}`} aria-expanded="true"
+                        aria-controls={`collapseOne${entityName}`}>
+                    {entityName}
+                </button>
+            </h2>
+            <div id={`collapseOne${entityName}`} className="accordion-collapse collapse"
+                 aria-labelledby={`headingOne${entityName}`} data-bs-parent={`#accordion${entityName}`}>
+                <div className="accordion-body">
+
+                    <div className="data-details card card-body overflow-auto">
+                        {entityLst.map((p, i) =>
+                            <div key={i} className="row">
+                                <div className="col-1">
+                                    <input className="form-check-input"
+                                           type="checkbox"
+                                           value={`${p.id}`}
+                                           defaultChecked={true}
+                                           onChange={e => dealEntityDeleteLstFunc(e.target)}
+                                    />
+                                </div>
+                                <div className="col-11">
+                                    <EntityCard info={p} last={i === (entityLst.length - 1)}/>
+                                </div>
+                            </div>)}
+                    </div>
+
+
+                </div>
+        </div>
+        </div>
+        <div className="accordion-item border-dark border-2">
+                <h2 className="accordion-header" id={`headingTwo${entityName}`}>
+                    <button className="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse" data-bs-target={`#collapseTwo${entityName}`}
+                            aria-expanded="false" aria-controls={`collapseTwo${entityName}`}
+                            onClick={()=> {networkWrapper(getAllExceptEntities)}}>
+                        Add {entityName}
+                    </button>
+                </h2>
+                <div id={`collapseTwo${entityName}`} className="accordion-collapse collapse"
+                     aria-labelledby={`headingTwo${entityName}`} data-bs-parent={`#accordion${entityName}`}>
+                    <div className="accordion-body">
+
+
+                        <div className="data-details card card-body overflow-auto">
+                            {potentialEntities.map((p, i) =>
+                                <div key={i} className="row">
+                                    <div className="col-1">
+                                        <input className="form-check-input"
+                                               type="checkbox"
+                                               value={`${p.id}`}
+                                               defaultChecked={false}
+                                               onChange={e => dealEntityAddLstFunc(e.target)}
+                                        />
+                                    </div>
+                                    <div className="col-11">
+                                        <EntityCard info={p} last={i === (potentialEntities.length - 1)}/>
+                                    </div>
+                                </div>)}
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+    </div>)
+}
+
 
 export const CaseUpdPage = ({token})=> {
 
-    const {details, setUpdMode, participants, dealCaseParticipants,
-        witnesses, dealCaseWitnesses} = useContext(CasePageContext)
-
-    const submitHandler = async (event) => {
-        event.preventDefault()
-    }
+    const {details, setDetails, setUpdMode, participants, fetchCaseParticipants,
+        witnesses, fetchCaseWitnesses, orgs, fetchCaseOrganizations,
+        incidents, fetchCaseIncidents, articles, fetchCaseArticles} = useContext(CasePageContext)
 
     const [temporalName, setTemporalName] = useState(details.name)
     const [temporalDescription, setTemporalDescription] = useState(details.description)
     const [temporalCompleteness, setTemporalCompleteness] = useState(details.completeness)
 
-    const [people, setPeople] = useState([])
+    const [potentialParticipants, setPotentialParticipants] = useState([])
+    const [potentialWitnesses, setPotentialWitnesses] = useState([])
+    const [potentialOrgs, setPotentialOrgs] = useState([])
+    const [potentialIncidents, setPotentialIncidents] = useState([])
+    const [potentialArticles, setPotentialArticles] = useState([])
 
-    let participantsToDelete = []
-    let participantsToAdd = []
-    let witnessesToDelete = []
+    const [state, setState] = useState({
+        participantsToDelete : [],
+        participantsToAdd : [],
+        witnessesToDelete : [],
+        witnessesToAdd : [],
+        orgsToDelete : [],
+        orgsToAdd : [],
+        incidentsToDelete : [],
+        incidentsToAdd : [],
+        articlesToDelete : [],
+        articlesToAdd : []
+    })
+
 
     useEffect(() => {
         if (participants.length === 0) {
             console.log('dealCaseParticipants()')
-            dealCaseParticipants()
+            fetchCaseParticipants()
         }
         if (witnesses.length === 0) {
-            dealCaseWitnesses()
+            fetchCaseWitnesses()
+        }
+
+        if (orgs.length === 0) {
+            fetchCaseOrganizations()
+        }
+
+        if (incidents.length === 0) {
+            fetchCaseIncidents()
+        }
+
+        if (articles.length === 0) {
+            fetchCaseArticles()
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -38,45 +152,185 @@ export const CaseUpdPage = ({token})=> {
         setUpdMode(false)
     }
 
+
+    const submitHandler = async (event) => {
+        event.preventDefault()
+        let updDetails = {
+            id: details.id,
+            accessLvl: details.accessLvl,
+            name: temporalName,
+            description: temporalDescription,
+            completeness: temporalCompleteness
+        }
+
+        let res = await modifyById("case", details.id, token, updDetails)
+
+        if (state.participantsToDelete.length !== 0) {
+            await deleteRelationsById("case", "participants", details.id, token, state.participantsToDelete)
+        }
+        if (state.participantsToAdd.length !== 0) {
+            await addRelationsById("case", "participants", details.id, token, state.participantsToAdd)
+        }
+
+        if (state.witnessesToDelete.length !== 0) {
+            await deleteRelationsById("case", "witnesses", details.id, token, state.witnessesToDelete)
+        }
+        if (state.witnessesToAdd.length !== 0) {
+            await addRelationsById("case", "witnesses", details.id, token, state.witnessesToAdd)
+        }
+
+        if (state.orgsToDelete.length !== 0) {
+            await deleteRelationsById("case", "organizations", details.id, token, state.orgsToDelete)
+        }
+        if (state.orgsToAdd.length !== 0) {
+            await addRelationsById("case", "organizations", details.id, token, state.orgsToAdd)
+        }
+
+        if (state.incidentsToDelete.length !== 0) {
+            await deleteRelationsById("case", "incidents", details.id, token, state.incidentsToDelete)
+        }
+        if (state.incidentsToAdd.length !== 0) {
+            await addRelationsById("case", "incidents", details.id, token, state.incidentsToAdd)
+        }
+
+        if (state.articlesToDelete.length !== 0) {
+            await deleteRelationsById("case", "articles", details.id, token, state.articlesToDelete)
+        }
+        if (state.articlesToAdd.length !== 0) {
+            await addRelationsById("case", "articles", details.id, token, state.articlesToAdd)
+        }
+
+        setDetails(res)
+        setUpdMode(false)
+
+    }
+
+    const networkWrapper = async (wrappedFunc)=> {
+        window.localStorage.setItem('case_upd_state', JSON.stringify(state))
+        await wrappedFunc()
+        setState(JSON.parse(window.localStorage.getItem('case_upd_state')))
+        console.log("token")
+        console.log(token)
+    }
+
+
     const getAllExceptParticipants = async ()=> {
         let lst = await getAllExcept("person", token, participants)
-        console.log("PTC")
-        console.log(participants)
-        console.log(lst)
-        setPeople(lst)
+        setPotentialParticipants(lst)
+    }
+
+    const getAllExceptWitnesses = async ()=> {
+        let lst = await getAllExcept("person", token, witnesses)
+        setPotentialWitnesses(lst)
+    }
+
+    const getAllExceptOrgs = async ()=> {
+        let lst = await getAllExcept("organization", token, orgs)
+        setPotentialOrgs(lst)
+    }
+
+    const getAllExceptIncidents = async ()=> {
+        let lst = await getAllExcept("incident", token, incidents)
+        setPotentialIncidents(lst)
+    }
+
+    const getAllExceptArticles = async ()=> {
+        let lst = await getAllExcept("article", token, articles)
+        setPotentialArticles(lst)
     }
 
     const dealParticipantsDeleteLst = (checkbox)=> {
         let participantId = parseInt(checkbox.value)
         if (checkbox.checked) {
-            participantsToDelete = participantsToDelete.filter(item => { return item !== participantId})
+            state.participantsToDelete = state.participantsToDelete.filter(item => { return item !== participantId})
         } else {
-            participantsToDelete.push(participantId)
+            state.participantsToDelete.push(participantId)
         }
         console.log("participantsToDelete")
-        console.log(participantsToDelete)
+        console.log(state.participantsToDelete)
     }
 
     const dealParticipantsAddLst = (checkbox)=> {
         let participantId = parseInt(checkbox.value)
         if (!checkbox.checked) {
-            participantsToAdd = participantsToAdd.filter(item => { return item !== participantId})
+            state.participantsToAdd = state.participantsToAdd.filter(item => { return item !== participantId})
         } else {
-            participantsToAdd.push(participantId)
+            state.participantsToAdd.push(participantId)
         }
         console.log("participantsToAdd")
-        console.log(participantsToAdd)
+        console.log(state.participantsToAdd)
     }
 
     const dealWitnessesDeleteLst = (checkbox)=> {
         let witnessId = parseInt(checkbox.value)
         if (checkbox.checked) {
-            witnessesToDelete = witnessesToDelete.filter(item => { return item !== witnessId})
+            state.witnessesToDelete = state.witnessesToDelete.filter(item => { return item !== witnessId})
         } else {
-            witnessesToDelete.push(witnessId)
+            state.witnessesToDelete.push(witnessId)
         }
-        console.log("witnessesToDelete")
-        console.log(witnessesToDelete)
+    }
+
+    const dealWitnessesAddLst = (checkbox)=> {
+        let witnessesId = parseInt(checkbox.value)
+        if (!checkbox.checked) {
+            state.witnessesToAdd = state.witnessesToAdd.filter(item => { return item !== witnessesId})
+        } else {
+            state.witnessesToAdd.push(witnessesId)
+        }
+    }
+
+    const dealOrgsDeleteLst = (checkbox)=> {
+        let orgId = parseInt(checkbox.value)
+        if (checkbox.checked) {
+            state.orgsToDelete = state.orgsToDelete.filter(item => { return item !== orgId})
+        } else {
+            state.orgsToDelete.push(orgId)
+        }
+    }
+
+    const dealOrgsAddLst = (checkbox)=> {
+        let orgId = parseInt(checkbox.value)
+        if (!checkbox.checked) {
+            state.orgsToAdd = state.orgsToAdd.filter(item => { return item !== orgId})
+        } else {
+            state.orgsToAdd.push(orgId)
+        }
+    }
+
+    const dealIncidentsDeleteLst = (checkbox)=> {
+        let incidentId = parseInt(checkbox.value)
+        if (checkbox.checked) {
+            state.incidentsToDelete = state.incidentsToDelete.filter(item => { return item !== incidentId})
+        } else {
+            state.incidentsToDelete.push(incidentId)
+        }
+    }
+
+    const dealIncidentsAddLst = (checkbox)=> {
+        let incidentId = parseInt(checkbox.value)
+        if (!checkbox.checked) {
+            state.incidentsToAdd = state.incidentsToAdd.filter(item => { return item !== incidentId})
+        } else {
+            state.incidentsToAdd.push(incidentId)
+        }
+    }
+
+    const dealArticlesDeleteLst = (checkbox)=> {
+        let articleId = parseInt(checkbox.value)
+        if (checkbox.checked) {
+            state.articlesToDelete = state.articlesToDelete.filter(item => { return item !== articleId})
+        } else {
+            state.articlesToDelete.push(articleId)
+        }
+    }
+
+    const dealArticlesAddLst = (checkbox)=> {
+        let articleId = parseInt(checkbox.value)
+        if (!checkbox.checked) {
+            state.articlesToAdd = state.articlesToAdd.filter(item => { return item !== articleId})
+        } else {
+            state.articlesToAdd.push(articleId)
+        }
     }
 
     return (
@@ -127,154 +381,60 @@ export const CaseUpdPage = ({token})=> {
                             <h3>Details</h3>
                         </div>
 
-                        <div className="accordion mb-3" id="accordionExample">
+                        <UpdAccordion
+                            entityName={"Participants"}
+                            entityLst={participants}
+                            potentialEntities={potentialParticipants}
+                            dealEntityAddLstFunc={dealParticipantsAddLst}
+                            dealEntityDeleteLstFunc={dealParticipantsDeleteLst}
+                            getAllExceptEntities={getAllExceptParticipants}
+                            networkWrapper={networkWrapper}
+                            EntityCard={PersonUpdCard}
+                        />
 
-                            <div className="accordion-item border-dark border-2">
-                                <h2 className="accordion-header" id="headingOne">
-                                    <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseOne" aria-expanded="true"
-                                            aria-controls="collapseOne">
-                                        Participants
-                                    </button>
-                                </h2>
-                                <div id="collapseOne" className="accordion-collapse collapse"
-                                     aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                    <div className="accordion-body">
+                        <UpdAccordion
+                            entityName={"Witnesses"}
+                            entityLst={witnesses}
+                            potentialEntities={potentialWitnesses}
+                            dealEntityAddLstFunc={dealWitnessesAddLst}
+                            dealEntityDeleteLstFunc={dealWitnessesDeleteLst}
+                            getAllExceptEntities={getAllExceptWitnesses}
+                            networkWrapper={networkWrapper}
+                            EntityCard={PersonUpdCard}
+                        />
 
-                                            <div className="data-details card card-body overflow-auto">
-                                                {participants.map((p, i) =>
-                                                    <div key={i} className="row">
-                                                        <div className="col-1">
-                                                            <input className="form-check-input"
-                                                                   type="checkbox"
-                                                                   value={`${p.id}`}
-                                                                   defaultChecked={true}
-                                                                   onChange={e => dealParticipantsDeleteLst(e.target)}
-                                                            />
-                                                        </div>
-                                                        <div className="col-11">
-                                                            <PersonUpdCard personInfo={p} last={i === (participants.length - 1)}/>
-                                                        </div>
-                                                    </div>)}
-                                            </div>
+                        <UpdAccordion
+                            entityName={"Organizations"}
+                            entityLst={orgs}
+                            potentialEntities={potentialOrgs}
+                            dealEntityAddLstFunc={dealOrgsAddLst}
+                            dealEntityDeleteLstFunc={dealOrgsDeleteLst}
+                            getAllExceptEntities={getAllExceptOrgs}
+                            networkWrapper={networkWrapper}
+                            EntityCard={OrganizationUpdCard}
+                        />
 
+                        <UpdAccordion
+                            entityName={"Incidents"}
+                            entityLst={incidents}
+                            potentialEntities={potentialIncidents}
+                            dealEntityAddLstFunc={dealIncidentsAddLst}
+                            dealEntityDeleteLstFunc={dealIncidentsDeleteLst}
+                            getAllExceptEntities={getAllExceptIncidents}
+                            networkWrapper={networkWrapper}
+                            EntityCard={IncidentUpdCard}
+                        />
 
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div className="accordion-item border-dark border-2">
-                                <h2 className="accordion-header" id="headingTwo">
-                                    <button className="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                            aria-expanded="false" aria-controls="collapseTwo"
-                                    onClick={getAllExceptParticipants}>
-                                        Add participants
-                                    </button>
-                                </h2>
-                                <div id="collapseTwo" className="accordion-collapse collapse"
-                                     aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                    <div className="accordion-body">
-
-
-                                        <div className="data-details card card-body overflow-auto">
-                                                {people.map((p, i) =>
-                                                    <div key={i} className="row">
-                                                        <div className="col-1">
-                                                            <input className="form-check-input"
-                                                                   type="checkbox"
-                                                                   value={`${p.id}`}
-                                                                   defaultChecked={false}
-                                                                   onChange={e => dealParticipantsAddLst(e.target)}
-                                                            />
-                                                        </div>
-                                                        <div className="col-11">
-                                                            <PersonUpdCard personInfo={p} last={i === (people.length - 1)}/>
-                                                        </div>
-                                                    </div>)}
-                                        </div>
-
-
-
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        {/*<div className="pt-2 btn-group" role="group">*/}
-                        {/*    <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"*/}
-                        {/*            data-bs-target="#collapseParticipants">*/}
-                        {/*        Participants*/}
-                        {/*    </button>*/}
-                        {/*    <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"*/}
-                        {/*            data-bs-target="#collapsePotentialParticipants" onClick={getAllPeople}>*/}
-                        {/*        Add participants*/}
-                        {/*    </button>*/}
-                        {/*</div>*/}
-                        {/*<div className="collapse pt-1" id="collapseParticipants">*/}
-                        {/*    <div className="data-details card card-body overflow-auto">*/}
-                        {/*        {participants.map((p, i) =>*/}
-                        {/*            <div key={i} className="row">*/}
-                        {/*                <div className="col-1">*/}
-                        {/*                    <input className="form-check-input"*/}
-                        {/*                           type="checkbox"*/}
-                        {/*                           value={`${p.id}`}*/}
-                        {/*                           defaultChecked={true}*/}
-                        {/*                           onChange={e => dealParticipantsDeleteLst(e.target)}*/}
-                        {/*                    />*/}
-                        {/*                </div>*/}
-                        {/*                <div className="col-11">*/}
-                        {/*                    <PersonUpdCard personInfo={p} last={i === (participants.length - 1)}/>*/}
-                        {/*                </div>*/}
-                        {/*            </div>)}*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-                        {/*<div className="collapse pt-1" id="collapsePotentialParticipants">*/}
-                        {/*    <div className="data-details card card-body overflow-auto">*/}
-                        {/*        {people.map((p, i) =>*/}
-                        {/*            <div key={i} className="row">*/}
-                        {/*                <div className="col-1">*/}
-                        {/*                    <input className="form-check-input"*/}
-                        {/*                           type="checkbox"*/}
-                        {/*                           value={`${p.id}`}*/}
-                        {/*                           defaultChecked={false}*/}
-                        {/*                           onChange={e => dealParticipantsAddLst(e.target)}*/}
-                        {/*                    />*/}
-                        {/*                </div>*/}
-                        {/*                <div className="col-11">*/}
-                        {/*                    <PersonUpdCard personInfo={p} last={i === (people.length - 1)}/>*/}
-                        {/*                </div>*/}
-                        {/*            </div>)}*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-
-                        <div className="pt-2 pb-2">
-                            <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseWitnesses">
-                                Witnesses
-                            </button>
-                        </div>
-                        <div className="collapse pt-1" id="collapseWitnesses">
-                            <div className="data-details card card-body overflow-auto">
-                                {witnesses.map((p, i) =>
-                                    <div key={i} className="row">
-                                        <div className="col-1">
-                                            <input className="form-check-input"
-                                                   type="checkbox"
-                                                   value={`${p.id}`}
-                                                   defaultChecked={true}
-                                                   onChange={e => dealWitnessesDeleteLst(e.target)}
-                                            />
-                                        </div>
-                                        <div className="col-11">
-                                            <PersonUpdCard personInfo={p} last={i === (witnesses.length - 1)}/>
-                                        </div>
-                                    </div>)}
-                            </div>
-                        </div>
+                        <UpdAccordion
+                            entityName={"Articles"}
+                            entityLst={articles}
+                            potentialEntities={potentialArticles}
+                            dealEntityAddLstFunc={dealArticlesAddLst}
+                            dealEntityDeleteLstFunc={dealArticlesDeleteLst}
+                            getAllExceptEntities={getAllExceptArticles}
+                            networkWrapper={networkWrapper}
+                            EntityCard={ArticleUpdCard}
+                        />
 
 
                         <button type="submit" className="btn btn-dark" >Submit</button>

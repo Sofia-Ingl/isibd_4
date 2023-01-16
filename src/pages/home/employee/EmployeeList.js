@@ -7,19 +7,19 @@
 // private String passport;
 // private String status;
 
-export const EmployeeCard = ({employeeInfo, last})=> {
+export const EmployeeCard = ({info, last})=> {
     return (
         <div className={`card ${(last === false)? "mb-4":""}`}>
             <div className="card-header">
-                {employeeInfo.positionName}
+                {info.positionName}
             </div>
             <div className="card-body">
-                <h5 className="card-title">{employeeInfo.name} </h5>
-                <p className="card-text text-truncate">Department: {employeeInfo.departmentName}</p>
+                <h5 className="card-title">{info.name} </h5>
+                <p className="card-text text-truncate">Department: {info.departmentName}</p>
                 {/*<NavLink to={`/people/${personInfo.id}`} className="btn btn-dark">Details</NavLink>*/}
             </div>
             <div className="card-footer">
-                {employeeInfo.status}
+                {info.status}
             </div>
         </div>
     );

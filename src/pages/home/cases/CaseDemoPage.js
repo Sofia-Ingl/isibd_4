@@ -4,6 +4,8 @@ import {EvidenceCard} from "./EvidenceCard";
 import {useContext} from "react";
 import {CasePageContext} from "./CasePageState";
 import {EmployeeCard} from "../employee/EmployeeList";
+import {IncidentCard} from "../incidents/IncidentsList";
+import {ArticleCard} from "../articles/ArticlesList";
 
 export const CaseDemoPage = ()=> {
 
@@ -13,6 +15,8 @@ export const CaseDemoPage = ()=> {
         orgs, dealCaseOrganizations,
         evidences, dealCaseEvidences,
         employees, dealCaseEmployees,
+        incidents, dealCaseIncidents,
+        articles, dealCaseArticles,
         userResponsible} = useContext(CasePageContext)
 
     const updateCase = ()=> {
@@ -43,7 +47,7 @@ export const CaseDemoPage = ()=> {
                         Access level: {details.accessLvl}
                     </div>
                 </div>
-                <div className="pt-2">
+                <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseParticipants" onClick={dealCaseParticipants}>
                         Participants
@@ -51,11 +55,11 @@ export const CaseDemoPage = ()=> {
                 </div>
                 <div className="collapse pt-1" id="collapseParticipants">
                     <div className="data-details card card-body overflow-auto">
-                        {participants.map((p, i) => <PersonCard key={i} personInfo={p} last={i === (participants.length - 1)}/>)}
+                        {participants.map((p, i) => <PersonCard key={i} info={p} last={i === (participants.length - 1)}/>)}
                     </div>
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseWitnesses" onClick={dealCaseWitnesses}>
                         Witnesses
@@ -63,11 +67,11 @@ export const CaseDemoPage = ()=> {
                 </div>
                 <div className="collapse pt-1" id="collapseWitnesses">
                     <div className="data-details card card-body overflow-auto">
-                        {witnesses.map((p, i) => <PersonCard key={i} personInfo={p} last={i === (witnesses.length - 1)}/>)}
+                        {witnesses.map((p, i) => <PersonCard key={i} info={p} last={i === (witnesses.length - 1)}/>)}
                     </div>
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseOrganizations" onClick={dealCaseOrganizations}>
                         Organizations
@@ -75,11 +79,11 @@ export const CaseDemoPage = ()=> {
                 </div>
                 <div className="collapse pt-1" id="collapseOrganizations">
                     <div className="data-details card card-body overflow-auto">
-                        {orgs.map((p, i) => <OrganizationCard key={i} orgInfo={p} last={i === (orgs.length - 1)}/>)}
+                        {orgs.map((p, i) => <OrganizationCard key={i} info={p} last={i === (orgs.length - 1)}/>)}
                     </div>
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseEvidences" onClick={dealCaseEvidences}>
                         Evidences
@@ -87,11 +91,37 @@ export const CaseDemoPage = ()=> {
                 </div>
                 <div className="collapse pt-1" id="collapseEvidences">
                     <div className="data-details card card-body overflow-auto">
-                        {evidences.map((e, i) => <EvidenceCard key={i} evidenceInfo={e} last={i === (evidences.length - 1)}/>)}
+                        {evidences.map((e, i) => <EvidenceCard key={i} info={e} last={i === (evidences.length - 1)}/>)}
                     </div>
                 </div>
 
-                <div className="pt-2">
+
+                <div className="pt-3">
+                    <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseIncidents" onClick={dealCaseIncidents}>
+                        Incidents
+                    </button>
+                </div>
+                <div className="collapse pt-1" id="collapseIncidents">
+                    <div className="data-details card card-body overflow-auto">
+                        {incidents.map((e, i) => <IncidentCard key={i} info={e} last={i === (incidents.length - 1)}/>)}
+                    </div>
+                </div>
+
+
+                <div className="pt-3">
+                    <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseArticles" onClick={dealCaseArticles}>
+                        Articles
+                    </button>
+                </div>
+                <div className="collapse pt-1" id="collapseArticles">
+                    <div className="data-details card card-body overflow-auto">
+                        {articles.map((e, i) => <ArticleCard key={i} info={e} last={i === (articles.length - 1)}/>)}
+                    </div>
+                </div>
+
+                <div className="pt-3 pb-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseEmployees" onClick={dealCaseEmployees}>
                         Responsible employees
@@ -99,21 +129,11 @@ export const CaseDemoPage = ()=> {
                 </div>
                 <div className="collapse pt-1" id="collapseEmployees">
                     <div className="data-details card card-body overflow-auto">
-                        {employees.map((e, i) => <EmployeeCard key={i} employeeInfo={e} last={i === (employees.length - 1)}/>)}
+                        {employees.map((e, i) => <EmployeeCard key={i} info={e} last={i === (employees.length - 1)}/>)}
                     </div>
                 </div>
 
-                {/*<div className="card">*/}
-                {/*    <div className="card card-body border-dark border-1">*/}
-                {/*        <h5 className="card-title">Responsible employees</h5>*/}
-                {/*        <div className="overflow-auto p-4 border border-light border-3 rounded">*/}
-                {/*            /!*<div className="card-container p-4 rounded bg-dark">*!/*/}
-                {/*            {employees.map((e, i) => <EmployeeCard key={i} employeeInfo={e} last={i === (employees.length - 1)}/>)}*/}
-                {/*        </div>*/}
 
-                {/*    </div>*/}
-
-                {/*</div>*/}
 
             </div>
         </div>

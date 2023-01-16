@@ -7,10 +7,14 @@ export const CasePageState = ({children, token, id})=> {
 
     // let { id } = useParams();
     const [details, setDetails] = useState({})
+    const [articles, setArticles] = useState([])
+    const [articlesActive, setArticlesActive] = useState(false)
     const [participants, setParticipants] = useState([])
     const [participantsActive, setParticipantsActive] = useState(false)
     const [witnesses, setWitnesses] = useState([])
     const [witnessesActive, setWitnessesActive] = useState(false)
+    const [incidents, setIncidents] = useState([])
+    const [incidentsActive, setIncidentsActive] = useState(false)
     const [orgs, setOrgs] = useState([])
     const [orgsActive, setOrgsActive] = useState(false)
     const [evidences, setEvidences] = useState([])
@@ -28,40 +32,101 @@ export const CasePageState = ({children, token, id})=> {
         setDetails(lst)
     }
 
+    const fetchCaseParticipants = async ()=> {
+
+        let lst = await getRelationsById("case", id, "participants", token)
+        setParticipants(lst)
+    }
     const dealCaseParticipants = async ()=> {
 
+        console.log('dealCaseParticipants')
         if (participantsActive === false) {
-            let lst = await getRelationsById("case", id, "participants", token)
-            setParticipants(lst)
+            await fetchCaseParticipants()
         }
         setParticipantsActive(!participantsActive)
+
+
     }
 
+    const fetchCaseWitnesses = async ()=> {
+
+       let lst = await getRelationsById("case", id, "witnesses", token)
+        setWitnesses(lst)
+
+    }
     const dealCaseWitnesses = async ()=> {
 
         if (witnessesActive === false) {
-            let lst = await getRelationsById("case", id, "witnesses", token)
-            setWitnesses(lst)
+            await fetchCaseWitnesses()
         }
         setWitnessesActive(!witnessesActive)
+
+
     }
 
+
+    const fetchCaseOrganizations = async ()=> {
+
+        let lst = await getRelationsById("case", id, "organizations", token)
+        setOrgs(lst)
+    }
     const dealCaseOrganizations = async ()=> {
 
         if (orgsActive === false) {
-            let lst = await getRelationsById("case", id, "organizations", token)
-            setOrgs(lst)
+            await fetchCaseOrganizations()
         }
         setOrgsActive(!witnessesActive)
+
+
+    }
+
+    const fetchCaseEvidences = async ()=> {
+
+        let lst = await getRelationsById("case", id, "evidences", token)
+        setEvidences(lst)
+
     }
 
     const dealCaseEvidences = async ()=> {
 
         if (evidencesActive === false) {
-            let lst = await getRelationsById("case", id, "evidences", token)
-            setEvidences(lst)
+            await fetchCaseEvidences()
         }
         setEvidencesActive(!evidencesActive)
+
+
+    }
+
+    const fetchCaseIncidents = async ()=> {
+        let lst = await getRelationsById("case", id, "incidents", token)
+        setIncidents(lst)
+
+    }
+    const dealCaseIncidents = async ()=> {
+
+        if (incidentsActive === false) {
+            await fetchCaseIncidents()
+        }
+        setIncidentsActive(!incidentsActive)
+
+
+    }
+
+    const fetchCaseArticles = async ()=> {
+
+        let lst = await getRelationsById("case", id, "articles", token)
+        setArticles(lst)
+
+    }
+
+    const dealCaseArticles = async ()=> {
+
+        if (articlesActive === false) {
+            await fetchCaseArticles()
+        }
+        setArticlesActive(!articlesActive)
+
+
     }
 
     const setEmployeeResponsibility = async ()=> {
@@ -105,12 +170,20 @@ export const CasePageState = ({children, token, id})=> {
     return (
         <CasePageContext.Provider value={{
             updMode, setUpdMode,
-            details,
+            details, setDetails,
             participants, dealCaseParticipants,
             witnesses, dealCaseWitnesses,
             orgs, dealCaseOrganizations,
             evidences, dealCaseEvidences,
             employees, dealCaseEmployees,
+            incidents, dealCaseIncidents,
+            articles, dealCaseArticles,
+            fetchCaseOrganizations,
+            fetchCaseParticipants,
+            fetchCaseWitnesses,
+            fetchCaseArticles,
+            fetchCaseIncidents,
+            fetchCaseEvidences,
             userResponsible
         }}>
             {children}

@@ -3,42 +3,37 @@ import {getAll} from "../../services/NetworkService";
 import {NavLink} from "react-router-dom";
 import "../../../App.css"
 
-export const PersonUpdCard = ({personInfo, last})=> {
+export const PersonUpdCard = ({info, last})=> {
     return (
         <div className={`card ${(last === false)? "mb-4":""}`}>
             <div className="card-header">
-                {personInfo.status}
+                {info.status}
             </div>
             <div className="card-body">
-                <h5 className="card-title">{(personInfo.name == null)? "[Unknown]": personInfo.name} | {(personInfo.alias == null)? "[No-Alias]": `"${personInfo.alias}"`} </h5>
+                <h5 className="card-title">{(info.name == null)? "[Unknown]": info.name} | {(info.alias == null)? "[No-Alias]": `"${info.alias}"`} </h5>
             </div>
-            {/*<div className="card-body">*/}
-            {/*    <h5 className="card-title">[AL: {caseInfo.accessLvl}] {caseInfo.name}</h5>*/}
-            {/*    <p className="card-text text-truncate">Description: {caseInfo.description}</p>*/}
-            {/*    <NavLink to={`/cases/${caseInfo.id}`} className="btn btn-dark">Details</NavLink>*/}
-            {/*</div>*/}
         </div>
     );
 }
 
-export const PersonCard = ({personInfo, last})=> {
+export const PersonCard = ({info, last})=> {
     return (
         <div className={`card ${(last === false)? "mb-4":""}`}>
             <div className="card-header">
-                {personInfo.status}
+                {info.status}
             </div>
             <div className="card-body">
-                <h5 className="card-title">{(personInfo.name == null)? "[Unknown]": personInfo.name} | {(personInfo.alias == null)? "[No-Alias]": `"${personInfo.alias}"`} </h5>
+                <h5 className="card-title">{(info.name == null)? "[Unknown]": info.name} | {(info.alias == null)? "[No-Alias]": `"${info.alias}"`} </h5>
                 {/*<p className="card-text text-truncate">Citizenship: {personInfo.citizenship}</p>*/}
-                <p className="card-text text-truncate">Address/Location: {(personInfo.address  == null)?
-                    "[Unknown]": personInfo.address} / {(personInfo.location  == null)?
-                    "[Unknown]": personInfo.location}</p>
+                <p className="card-text text-truncate">Address/Location: {(info.address  == null)?
+                    "[Unknown]": info.address} / {(info.location  == null)?
+                    "[Unknown]": info.location}</p>
                 {/*<p className="card-text text-truncate">Location: {personInfo.location}</p>*/}
                 {/*<p className="card-text">Sex: {personInfo.sex}</p>*/}
-                <NavLink to={`/people/${personInfo.id}`} className="btn btn-dark">Details</NavLink>
+                <NavLink to={`/people/${info.id}`} className="btn btn-dark">Details</NavLink>
             </div>
             <div className="card-footer">
-                Access level: {personInfo.accessLvl}
+                Access level: {info.accessLvl}
             </div>
             {/*<div className="card-body">*/}
             {/*    <h5 className="card-title">[AL: {caseInfo.accessLvl}] {caseInfo.name}</h5>*/}
@@ -66,7 +61,7 @@ export const PersonList = ({token})=>{
 
     return (
         <div className="card-container overflow-auto p-4 border border-light border-3 rounded bg-dark">
-            {people.map((p, i) => <PersonCard key={i} personInfo={p} last={i === (people.length - 1)}/>)}
+            {people.map((p, i) => <PersonCard key={i} info={p} last={i === (people.length - 1)}/>)}
         </div>
 
     );

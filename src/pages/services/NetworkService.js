@@ -103,3 +103,85 @@ export const getRelationsById = async (objType, id, relationType, token) => {
     }
     return []
 }
+
+
+export const addRelationsById = async (objType, relationType, id, token, addIdsLst) => {
+    try {
+        console.log(token)
+        const response = await axios.post(
+            `${BASIC_URL}/api/${objType}/${id}/${relationType}/add`,
+            addIdsLst,
+            {
+                headers: { "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`}
+            }
+        );
+        console.log(response);
+        return response.data
+
+
+    } catch (err) {
+        if (!err?.response) {
+            console.log("No Server Response");
+        } else {
+            console.log("Fail");
+            console.log(err.response?.status);
+            console.log(err.response);
+        }
+    }
+    return null
+}
+
+export const deleteRelationsById = async (objType, relationType, id, token, deleteIdsLst) => {
+    try {
+        console.log(token)
+        const response = await axios.post(
+            `${BASIC_URL}/api/${objType}/${id}/${relationType}/delete`,
+            deleteIdsLst,
+            {
+                headers: { "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`}
+            }
+        );
+        console.log(response);
+        return response.data
+
+
+    } catch (err) {
+        if (!err?.response) {
+            console.log("No Server Response");
+        } else {
+            console.log("Fail");
+            console.log(err.response?.status);
+            console.log(err.response);
+        }
+    }
+    return null
+}
+
+export const modifyById = async (objType, id, token, updObj) => {
+    try {
+        console.log(token)
+        const response = await axios.post(
+            `${BASIC_URL}/api/${objType}/${id}/modify`,
+            updObj,
+            {
+                headers: { "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`}
+            }
+        );
+        console.log(response);
+        return response.data
+
+
+    } catch (err) {
+        if (!err?.response) {
+            console.log("No Server Response");
+        } else {
+            console.log("Fail");
+            console.log(err.response?.status);
+            console.log(err.response);
+        }
+    }
+    return null
+}
