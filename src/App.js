@@ -7,6 +7,7 @@ import {CaseDetails} from "./pages/home/cases/CaseDetails";
 import {CasesList} from "./pages/home/cases/CasesList";
 import {PersonList} from "./pages/home/people/PersonList";
 import {OrganizationsList} from "./pages/home/organizations/OrganizationsList";
+import {CaseAddPage} from "./pages/home/cases/CaseAddPage";
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
                 <Routes>
                     <Route path={'/'} exact element={<MainComponent/>}/>
                     <Route path={'/cases'} exact element={<CasesList token={token}/>}/>
+                    <Route path={'/cases/add'} exact element={<CaseAddPage token={token}/>}/>
                     <Route path={'/cases/:id'} exact element={<CaseDetails token={token}/>}/>
                     <Route path={'/people'} exact element={<PersonList token={token}/>}/>
                     <Route path={'/organizations'} exact element={<OrganizationsList token={token}/>}/>

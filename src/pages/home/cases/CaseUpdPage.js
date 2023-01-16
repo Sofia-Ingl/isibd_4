@@ -103,6 +103,7 @@ export const CaseUpdPage = ({token})=> {
     const [temporalName, setTemporalName] = useState(details.name)
     const [temporalDescription, setTemporalDescription] = useState(details.description)
     const [temporalCompleteness, setTemporalCompleteness] = useState(details.completeness)
+    const [temporalAccessLvl, setTemporalAccessLvl] = useState(details.accessLvl)
 
     const [potentialParticipants, setPotentialParticipants] = useState([])
     const [potentialWitnesses, setPotentialWitnesses] = useState([])
@@ -157,7 +158,7 @@ export const CaseUpdPage = ({token})=> {
         event.preventDefault()
         let updDetails = {
             id: details.id,
-            accessLvl: details.accessLvl,
+            accessLvl: temporalAccessLvl,
             name: temporalName,
             description: temporalDescription,
             completeness: temporalCompleteness
@@ -368,6 +369,19 @@ export const CaseUpdPage = ({token})=> {
                                    value={temporalDescription}
                                    onChange={e => setTemporalDescription(e.target.value)}/>
                         </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="inputAccessLvl" className="form-label">Access level</label>
+                            <select className="form-select" value={temporalAccessLvl}
+                                    onChange={e => setTemporalAccessLvl(e.target.value)}>
+                                {
+                                    [...Array(parseInt(window.localStorage.getItem('accessLvl')) + 1).keys()].map(
+                                        (i) => <option key={i} value={i}>{i}</option>
+                                    )
+                                }
+                            </select>
+                        </div>
+
                         <div className="mb-3">
                             <label htmlFor="inputDescription" className="form-label">Description</label>
                             <select className="form-select" value={temporalCompleteness}
@@ -376,6 +390,7 @@ export const CaseUpdPage = ({token})=> {
                                 <option value="открыто">открыто</option>
                             </select>
                         </div>
+
 
                         <div className="mb-3">
                             <h3>Details</h3>

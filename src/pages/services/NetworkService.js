@@ -185,3 +185,30 @@ export const modifyById = async (objType, id, token, updObj) => {
     }
     return null
 }
+
+export const addEntity = async (objType, token, newEntity) => {
+    try {
+        console.log(token)
+        const response = await axios.post(
+            `${BASIC_URL}/api/${objType}/add`,
+            newEntity,
+            {
+                headers: { "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`}
+            }
+        );
+        console.log(response);
+        return response.data
+        //token.current = response.data.token
+
+    } catch (err) {
+        if (!err?.response) {
+            console.log("No Server Response");
+        } else {
+            console.log("Fail");
+            console.log(err.response?.status);
+            console.log(err.response);
+        }
+    }
+    return null
+}

@@ -1,5 +1,5 @@
 import "../../../App.css"
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getAll} from "../../services/NetworkService";
 import {NavLink} from "react-router-dom";
 
@@ -37,10 +37,17 @@ export const CasesList = ({token})=>{
 
     return (
         // <div className="container p-4 border border-dark border-3 rounded bg-dark">
+        <div>
             <div className="card-container overflow-auto p-4 border border-light border-3 rounded bg-dark">
                 {/*<div className="card-container p-4 rounded bg-dark">*/}
                 {cases.map((c, i) => <CaseCard key={i} info={c} last={i === (cases.length - 1)}/>)}
             </div>
+            <div className="mt-3 w-50">
+                <NavLink to="/cases/add" className="btn btn-dark w-25" >Add case</NavLink>
+            </div>
+
+        </div>
+
         // </div>
 
     );
