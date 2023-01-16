@@ -121,17 +121,20 @@ export const CaseDemoPage = ()=> {
                     </div>
                 </div>
 
-                <div className="pt-3 pb-3">
-                    <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseEmployees" onClick={dealCaseEmployees}>
-                        Responsible employees
-                    </button>
-                </div>
-                <div className="collapse pt-1" id="collapseEmployees">
-                    <div className="data-details card card-body overflow-auto">
-                        {employees.map((e, i) => <EmployeeCard key={i} info={e} last={i === (employees.length - 1)}/>)}
+                <div className="mb-3">
+                    <div className="pt-3">
+                        <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseEmployees" onClick={dealCaseEmployees}>
+                            Responsible employees
+                        </button>
+                    </div>
+                    <div className="collapse pt-1" id="collapseEmployees">
+                        <div className="data-details card card-body overflow-auto">
+                            {employees.map((e, i) => <EmployeeCard key={i} info={e} last={i === (employees.length - 1)}/>)}
+                        </div>
                     </div>
                 </div>
+
 
 
 

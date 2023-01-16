@@ -158,6 +158,7 @@ export const CasePageState = ({children, token, id})=> {
         console.log(details)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
     if (details == null) {
         return (
             <div className="container pt-4">

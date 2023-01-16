@@ -24,12 +24,9 @@ export const PersonCard = ({info, last})=> {
             </div>
             <div className="card-body">
                 <h5 className="card-title">{(info.name == null)? "[Unknown]": info.name} | {(info.alias == null)? "[No-Alias]": `"${info.alias}"`} </h5>
-                {/*<p className="card-text text-truncate">Citizenship: {personInfo.citizenship}</p>*/}
                 <p className="card-text text-truncate">Address/Location: {(info.address  == null)?
                     "[Unknown]": info.address} / {(info.location  == null)?
                     "[Unknown]": info.location}</p>
-                {/*<p className="card-text text-truncate">Location: {personInfo.location}</p>*/}
-                {/*<p className="card-text">Sex: {personInfo.sex}</p>*/}
                 <NavLink to={`/people/${info.id}`} className="btn btn-dark">Details</NavLink>
             </div>
             <div className="card-footer">
