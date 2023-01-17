@@ -7,13 +7,9 @@ export const PersonPageState = ({children, token, id})=> {
 
     const [details, setDetails] = useState({})
     const [memberships, setMemberships] = useState([])
-    const [membershipsActive, setMembershipsActive] = useState(false)
     const [cases, setCases] = useState([])
-    const [casesActive, setCasesActive] = useState(false)
     const [witnessCases, setWitnessCases] = useState([])
-    const [witnessCasesActive, setWitnessCasesActive] = useState(false)
     const [activities, setActivities] = useState([])
-    const [activitiesActive, setActivitiesActive] = useState(false)
 
     const [updMode, setUpdMode] = useState(false)
 
@@ -31,52 +27,27 @@ export const PersonPageState = ({children, token, id})=> {
 
 
     }
-    const dealPersonMemberships = async ()=> {
-
-        if (membershipsActive === false) {
-            await fetchPersonMemberships()
-        }
-        setMembershipsActive(!membershipsActive)
-    }
 
     const fetchPersonCases = async ()=> {
 
         let lst = await getRelationsById("person", id, "cases", token)
         setCases(lst)
     }
-    const dealPersonCases = async ()=> {
 
-        if (casesActive === false) {
-            await fetchPersonCases()
-        }
-        setCasesActive(!casesActive)
-    }
 
     const fetchPersonWitnessCases = async ()=> {
 
         let lst = await getRelationsById("person", id, "witness_cases", token)
         setWitnessCases(lst)
     }
-    const dealPersonWitnessCases = async ()=> {
 
-        if (witnessCasesActive === false) {
-            await fetchPersonWitnessCases()
-        }
-        setWitnessCasesActive(!witnessCasesActive)
-    }
 
     const fetchPersonActivities = async ()=> {
 
         let lst = await getRelationsById("person", id, "activities", token)
         setActivities(lst)
     }
-    const dealPersonActivities = async ()=> {
 
-        if (activitiesActive === false) {
-            await fetchPersonActivities()
-        }
-        setActivitiesActive(!activitiesActive)
-    }
 
     useEffect(() => {
         getPerson()
@@ -96,10 +67,10 @@ export const PersonPageState = ({children, token, id})=> {
         <PersonPageContext.Provider value={{
             updMode, setUpdMode,
             details, setDetails,
-            memberships, dealPersonMemberships,
-            cases, dealPersonCases,
-            witnessCases, dealPersonWitnessCases,
-            activities, dealPersonActivities,
+            memberships,
+            cases,
+            witnessCases,
+            activities,
             fetchPersonCases,
             fetchPersonMemberships,
             fetchPersonActivities,

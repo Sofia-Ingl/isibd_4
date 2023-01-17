@@ -17,10 +17,10 @@ export const PersonMembershipCard = ({info, last})=> {
 
 export const PersonDemoPage = ()=> {
     const {details, setUpdMode,
-        memberships, dealPersonMemberships,
-        cases, dealPersonCases,
-        witnessCases, dealPersonWitnessCases,
-        activities, dealPersonActivities
+        memberships, fetchPersonMemberships,
+        cases, fetchPersonCases,
+        witnessCases, fetchPersonWitnessCases,
+        activities, fetchPersonActivities
     } = useContext(PersonPageContext)
 
     const updatePerson = ()=> {
@@ -71,7 +71,7 @@ export const PersonDemoPage = ()=> {
                 </div>
                 <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseMemberships" onClick={dealPersonMemberships}>
+                            data-bs-target="#collapseMemberships" onClick={fetchPersonMemberships}>
                         Memberships
                     </button>
                 </div>
@@ -83,7 +83,7 @@ export const PersonDemoPage = ()=> {
 
                 <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseCases" onClick={dealPersonCases}>
+                            data-bs-target="#collapseCases" onClick={fetchPersonCases}>
                         Cases
                     </button>
                 </div>
@@ -95,7 +95,7 @@ export const PersonDemoPage = ()=> {
 
                 <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseWitnessCases" onClick={dealPersonWitnessCases}>
+                            data-bs-target="#collapseWitnessCases" onClick={fetchPersonWitnessCases}>
                         Witness cases
                     </button>
                 </div>
@@ -108,7 +108,7 @@ export const PersonDemoPage = ()=> {
                 <div className="mb-3">
                     <div className="pt-3">
                         <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseActivities" onClick={dealPersonActivities}>
+                                data-bs-target="#collapseActivities" onClick={fetchPersonActivities}>
                             Activities
                         </button>
                     </div>

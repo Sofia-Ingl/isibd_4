@@ -8,19 +8,19 @@ export const CasePageState = ({children, token, id})=> {
     // let { id } = useParams();
     const [details, setDetails] = useState({})
     const [articles, setArticles] = useState([])
-    const [articlesActive, setArticlesActive] = useState(false)
+    // const [articlesActive, setArticlesActive] = useState(false)
     const [participants, setParticipants] = useState([])
-    const [participantsActive, setParticipantsActive] = useState(false)
+    // const [participantsActive, setParticipantsActive] = useState(false)
     const [witnesses, setWitnesses] = useState([])
-    const [witnessesActive, setWitnessesActive] = useState(false)
+    // const [witnessesActive, setWitnessesActive] = useState(false)
     const [incidents, setIncidents] = useState([])
-    const [incidentsActive, setIncidentsActive] = useState(false)
+    // const [incidentsActive, setIncidentsActive] = useState(false)
     const [orgs, setOrgs] = useState([])
-    const [orgsActive, setOrgsActive] = useState(false)
+    // const [orgsActive, setOrgsActive] = useState(false)
     const [evidences, setEvidences] = useState([])
-    const [evidencesActive, setEvidencesActive] = useState(false)
+    // const [evidencesActive, setEvidencesActive] = useState(false)
     const [employees, setEmployees] = useState([])
-    const [employeesActive, setEmployeesActive] = useState(false)
+    // const [employeesActive, setEmployeesActive] = useState(false)
     const [userResponsible, setUserResponsible] = useState(false)
 
     // eslint-disable-next-line no-unused-vars
@@ -37,30 +37,11 @@ export const CasePageState = ({children, token, id})=> {
         let lst = await getRelationsById("case", id, "participants", token)
         setParticipants(lst)
     }
-    const dealCaseParticipants = async ()=> {
-
-        console.log('dealCaseParticipants')
-        if (participantsActive === false) {
-            await fetchCaseParticipants()
-        }
-        setParticipantsActive(!participantsActive)
-
-
-    }
 
     const fetchCaseWitnesses = async ()=> {
 
        let lst = await getRelationsById("case", id, "witnesses", token)
         setWitnesses(lst)
-
-    }
-    const dealCaseWitnesses = async ()=> {
-
-        if (witnessesActive === false) {
-            await fetchCaseWitnesses()
-        }
-        setWitnessesActive(!witnessesActive)
-
 
     }
 
@@ -70,15 +51,6 @@ export const CasePageState = ({children, token, id})=> {
         let lst = await getRelationsById("case", id, "organizations", token)
         setOrgs(lst)
     }
-    const dealCaseOrganizations = async ()=> {
-
-        if (orgsActive === false) {
-            await fetchCaseOrganizations()
-        }
-        setOrgsActive(!witnessesActive)
-
-
-    }
 
     const fetchCaseEvidences = async ()=> {
 
@@ -87,28 +59,9 @@ export const CasePageState = ({children, token, id})=> {
 
     }
 
-    const dealCaseEvidences = async ()=> {
-
-        if (evidencesActive === false) {
-            await fetchCaseEvidences()
-        }
-        setEvidencesActive(!evidencesActive)
-
-
-    }
-
     const fetchCaseIncidents = async ()=> {
         let lst = await getRelationsById("case", id, "incidents", token)
         setIncidents(lst)
-
-    }
-    const dealCaseIncidents = async ()=> {
-
-        if (incidentsActive === false) {
-            await fetchCaseIncidents()
-        }
-        setIncidentsActive(!incidentsActive)
-
 
     }
 
@@ -119,15 +72,6 @@ export const CasePageState = ({children, token, id})=> {
 
     }
 
-    const dealCaseArticles = async ()=> {
-
-        if (articlesActive === false) {
-            await fetchCaseArticles()
-        }
-        setArticlesActive(!articlesActive)
-
-
-    }
 
     const setEmployeeResponsibility = async ()=> {
         let lst = await getRelationsById("case", id, "responsible_employees", token)
@@ -142,13 +86,10 @@ export const CasePageState = ({children, token, id})=> {
         setUserResponsible(isUserResponsible)
     }
 
-    const dealCaseEmployees = async ()=> {
+    const fetchCaseEmployees = async ()=> {
 
-        if (employeesActive === false) {
             let lst = await getRelationsById("case", id, "responsible_employees", token)
             setEmployees(lst)
-        }
-        setEmployeesActive(!employeesActive)
     }
 
     useEffect(() => {
@@ -172,13 +113,13 @@ export const CasePageState = ({children, token, id})=> {
         <CasePageContext.Provider value={{
             updMode, setUpdMode,
             details, setDetails,
-            participants, dealCaseParticipants,
-            witnesses, dealCaseWitnesses,
-            orgs, dealCaseOrganizations,
-            evidences, dealCaseEvidences,
-            employees, dealCaseEmployees,
-            incidents, dealCaseIncidents,
-            articles, dealCaseArticles,
+            participants,
+            witnesses,
+            orgs,
+            evidences,
+            employees, fetchCaseEmployees,
+            incidents,
+            articles,
             fetchCaseOrganizations,
             fetchCaseParticipants,
             fetchCaseWitnesses,

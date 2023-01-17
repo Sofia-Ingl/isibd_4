@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getAll} from "../../services/NetworkService";
 import {NavLink} from "react-router-dom";
 import "../../../App.css"
@@ -32,11 +32,7 @@ export const PersonCard = ({info, last})=> {
             <div className="card-footer">
                 Access level: {info.accessLvl}
             </div>
-            {/*<div className="card-body">*/}
-            {/*    <h5 className="card-title">[AL: {caseInfo.accessLvl}] {caseInfo.name}</h5>*/}
-            {/*    <p className="card-text text-truncate">Description: {caseInfo.description}</p>*/}
-            {/*    <NavLink to={`/cases/${caseInfo.id}`} className="btn btn-dark">Details</NavLink>*/}
-            {/*</div>*/}
+
         </div>
     );
 }
@@ -57,9 +53,15 @@ export const PersonList = ({token})=>{
     }, [])
 
     return (
+    <div>
         <div className="card-container overflow-auto p-4 border border-light border-3 rounded bg-dark">
             {people.map((p, i) => <PersonCard key={i} info={p} last={i === (people.length - 1)}/>)}
         </div>
+        <div className="mt-3 w-50">
+            <NavLink to="/people/add" className="btn btn-dark w-25" >Add person</NavLink>
+        </div>
+
+    </div>
 
     );
 }

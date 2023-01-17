@@ -74,7 +74,7 @@ export const CaseUpdPage = ({token})=> {
             id: details.id,
             accessLvl: temporalAccessLvl,
             name: temporalName,
-            description: temporalDescription,
+            description: (temporalDescription ==='') ? null : temporalDescription,
             completeness: temporalCompleteness
         }
 
@@ -130,28 +130,39 @@ export const CaseUpdPage = ({token})=> {
 
 
     const getAllExceptParticipants = async ()=> {
-        let lst = await getAllExcept("person", token, participants)
-        setPotentialParticipants(lst)
+        if (potentialParticipants.length === 0) {
+            let lst = await getAllExcept("person", token, participants)
+            setPotentialParticipants(lst)
+        }
+
     }
 
     const getAllExceptWitnesses = async ()=> {
-        let lst = await getAllExcept("person", token, witnesses)
-        setPotentialWitnesses(lst)
+        if (potentialWitnesses.length === 0) {
+            let lst = await getAllExcept("person", token, witnesses)
+            setPotentialWitnesses(lst)
+        }
     }
 
     const getAllExceptOrgs = async ()=> {
-        let lst = await getAllExcept("organization", token, orgs)
-        setPotentialOrgs(lst)
+        if (potentialOrgs.length === 0) {
+            let lst = await getAllExcept("organization", token, orgs)
+            setPotentialOrgs(lst)
+        }
     }
 
     const getAllExceptIncidents = async ()=> {
-        let lst = await getAllExcept("incident", token, incidents)
-        setPotentialIncidents(lst)
+        if (potentialIncidents.length === 0) {
+            let lst = await getAllExcept("incident", token, incidents)
+            setPotentialIncidents(lst)
+        }
     }
 
     const getAllExceptArticles = async ()=> {
-        let lst = await getAllExcept("article", token, articles)
-        setPotentialArticles(lst)
+        if (potentialArticles.length === 0) {
+            let lst = await getAllExcept("article", token, articles)
+            setPotentialArticles(lst)
+        }
     }
 
     const dealParticipantsDeleteLst = (checkbox)=> {

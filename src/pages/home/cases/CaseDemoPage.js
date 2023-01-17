@@ -10,13 +10,13 @@ import {ArticleCard} from "../articles/ArticlesList";
 export const CaseDemoPage = ()=> {
 
     const {details, setUpdMode,
-        participants, dealCaseParticipants,
-        witnesses, dealCaseWitnesses,
-        orgs, dealCaseOrganizations,
-        evidences, dealCaseEvidences,
-        employees, dealCaseEmployees,
-        incidents, dealCaseIncidents,
-        articles, dealCaseArticles,
+        participants, fetchCaseParticipants,
+        witnesses, fetchCaseWitnesses,
+        orgs, fetchCaseOrganizations,
+        evidences, fetchCaseEvidences,
+        employees, fetchCaseEmployees,
+        incidents, fetchCaseIncidents,
+        articles, fetchCaseArticles,
         userResponsible} = useContext(CasePageContext)
 
     const updateCase = ()=> {
@@ -49,7 +49,7 @@ export const CaseDemoPage = ()=> {
                 </div>
                 <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseParticipants" onClick={dealCaseParticipants}>
+                            data-bs-target="#collapseParticipants" onClick={fetchCaseParticipants}>
                         Participants
                     </button>
                 </div>
@@ -61,7 +61,7 @@ export const CaseDemoPage = ()=> {
 
                 <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseWitnesses" onClick={dealCaseWitnesses}>
+                            data-bs-target="#collapseWitnesses" onClick={fetchCaseWitnesses}>
                         Witnesses
                     </button>
                 </div>
@@ -73,7 +73,7 @@ export const CaseDemoPage = ()=> {
 
                 <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseOrganizations" onClick={dealCaseOrganizations}>
+                            data-bs-target="#collapseOrganizations" onClick={fetchCaseOrganizations}>
                         Organizations
                     </button>
                 </div>
@@ -85,7 +85,7 @@ export const CaseDemoPage = ()=> {
 
                 <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseEvidences" onClick={dealCaseEvidences}>
+                            data-bs-target="#collapseEvidences" onClick={fetchCaseEvidences}>
                         Evidences
                     </button>
                 </div>
@@ -98,7 +98,7 @@ export const CaseDemoPage = ()=> {
 
                 <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseIncidents" onClick={dealCaseIncidents}>
+                            data-bs-target="#collapseIncidents" onClick={fetchCaseIncidents}>
                         Incidents
                     </button>
                 </div>
@@ -111,7 +111,7 @@ export const CaseDemoPage = ()=> {
 
                 <div className="pt-3">
                     <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseArticles" onClick={dealCaseArticles}>
+                            data-bs-target="#collapseArticles" onClick={fetchCaseArticles}>
                         Articles
                     </button>
                 </div>
@@ -124,7 +124,7 @@ export const CaseDemoPage = ()=> {
                 <div className="mb-3">
                     <div className="pt-3">
                         <button className="container bg-light rounded" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseEmployees" onClick={dealCaseEmployees}>
+                                data-bs-target="#collapseEmployees" onClick={fetchCaseEmployees}>
                             Responsible employees
                         </button>
                     </div>
