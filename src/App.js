@@ -12,6 +12,9 @@ import {PersonDetails} from "./pages/home/people/PersonDetails";
 import {PersonAddPage} from "./pages/home/people/PersonAddPage";
 import {OrganizationDetails} from "./pages/home/organizations/OrganizationDetails";
 import {OrganizationAddPage} from "./pages/home/organizations/OrganizationAddPage";
+import {IncidentsList} from "./pages/home/incidents/IncidentsList";
+import {IncidentDetails} from "./pages/home/incidents/IncidentDetails";
+import {IncidentAddPage} from "./pages/home/incidents/IncidentAddPage";
 
 function App() {
 
@@ -44,7 +47,9 @@ function App() {
                     <Route path={'/organizations'} exact element={<OrganizationsList token={token}/>}/>
                     <Route path={'/organizations/add'} exact element={<OrganizationAddPage token={token}/>}/>
                     <Route path={'/organizations/:id'} exact element={<OrganizationDetails token={token}/>}/>
-                    {/*<Route path={'/people/:id'} exact element={<Per token={token}/>}/>*/}
+                    <Route path={'/incidents'} exact element={<IncidentsList token={token}/>}/>
+                    <Route path={'/incidents/add'} exact element={<IncidentAddPage token={token}/>}/>
+                    <Route path={'/incidents/:id'} exact element={<IncidentDetails token={token}/>}/>
                     <Route path="*" element={<Navigate from="*" to="/" /> } />
 
                 </Routes>

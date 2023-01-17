@@ -27,7 +27,6 @@ export const Navbar = ({setToken}) => {
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
                             <NavLink className="nav-link" to="/">Home</NavLink>
-                            {/*<NavLink to={`/`} className={`nav-link ${}`}>Home</NavLink>*/}
                         </li>
                         <li className="nav-item">
                             <NavLink className="nav-link" to="/cases">Cases</NavLink>
@@ -37,6 +36,9 @@ export const Navbar = ({setToken}) => {
                         </li>
                         <li className="nav-item">
                             <NavLink className="nav-link" to="/organizations">Organizations</NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/incidents">Incidents</NavLink>
                         </li>
                     </ul>
                     <form className="d-flex" onSubmit={submitHandler}>

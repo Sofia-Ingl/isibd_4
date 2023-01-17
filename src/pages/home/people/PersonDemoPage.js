@@ -1,4 +1,4 @@
-import {useContext, useEffect} from "react";
+import {useContext} from "react";
 import {CaseCard} from "../cases/CasesList";
 import {ActivityCard} from "../activities/ActivitiesList";
 import {PersonPageContext} from "./PersonPageState";
@@ -28,14 +28,6 @@ export const PersonDemoPage = ()=> {
     const updatePerson = ()=> {
         setUpdMode(true)
     }
-
-    useEffect(()=> {
-        console.log(memberships)
-        },
-        // eslint-disable-next-line
-        []
-
-    )
 
     return (
         <div className="container px-5">
