@@ -8,19 +8,12 @@ export const CasePageState = ({children, token, id})=> {
     // let { id } = useParams();
     const [details, setDetails] = useState({})
     const [articles, setArticles] = useState([])
-    // const [articlesActive, setArticlesActive] = useState(false)
     const [participants, setParticipants] = useState([])
-    // const [participantsActive, setParticipantsActive] = useState(false)
     const [witnesses, setWitnesses] = useState([])
-    // const [witnessesActive, setWitnessesActive] = useState(false)
     const [incidents, setIncidents] = useState([])
-    // const [incidentsActive, setIncidentsActive] = useState(false)
     const [orgs, setOrgs] = useState([])
-    // const [orgsActive, setOrgsActive] = useState(false)
     const [evidences, setEvidences] = useState([])
-    // const [evidencesActive, setEvidencesActive] = useState(false)
     const [employees, setEmployees] = useState([])
-    // const [employeesActive, setEmployeesActive] = useState(false)
     const [userResponsible, setUserResponsible] = useState(false)
 
     // eslint-disable-next-line no-unused-vars

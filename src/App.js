@@ -10,6 +10,8 @@ import {OrganizationsList} from "./pages/home/organizations/OrganizationsList";
 import {CaseAddPage} from "./pages/home/cases/CaseAddPage";
 import {PersonDetails} from "./pages/home/people/PersonDetails";
 import {PersonAddPage} from "./pages/home/people/PersonAddPage";
+import {OrganizationDetails} from "./pages/home/organizations/OrganizationDetails";
+import {OrganizationAddPage} from "./pages/home/organizations/OrganizationAddPage";
 
 function App() {
 
@@ -40,6 +42,8 @@ function App() {
                     <Route path={'/people/add'} exact element={<PersonAddPage token={token}/>}/>
                     <Route path={'/people/:id'} exact element={<PersonDetails token={token}/>}/>
                     <Route path={'/organizations'} exact element={<OrganizationsList token={token}/>}/>
+                    <Route path={'/organizations/add'} exact element={<OrganizationAddPage token={token}/>}/>
+                    <Route path={'/organizations/:id'} exact element={<OrganizationDetails token={token}/>}/>
                     {/*<Route path={'/people/:id'} exact element={<Per token={token}/>}/>*/}
                     <Route path="*" element={<Navigate from="*" to="/" /> } />
 
