@@ -1,6 +1,8 @@
 import React, {useContext, useEffect, useState} from "react";
 import {IncidentPageContext} from "./IncidentPageState";
 import {modifyById} from "../../services/NetworkService";
+import {DatePicker, TimePicker} from "antd";
+import dayjs from "dayjs";
 
 
 export const IncidentUpdPage = ({token})=> {
@@ -11,6 +13,9 @@ export const IncidentUpdPage = ({token})=> {
 
 
     // time
+    const [temporalDateString, setTemporalDateString] = useState(details.time.split('T')[0])
+    // eslint-disable-next-line
+    const [temporalTimeString, setTemporalTimeString] = useState(details.time.split('T')[1])
     const [temporalPlace, setTemporalPlace] = useState(details.place)
     const [temporalType, setTemporalType] = useState(details.type)
     const [temporalDescription, setTemporalDescription] = useState(details.description)
@@ -38,7 +43,7 @@ export const IncidentUpdPage = ({token})=> {
             place: (temporalPlace==='') ? null : temporalPlace,
             type: (temporalType ==='') ? null : temporalType,
             description: (temporalDescription ==='') ? null : temporalDescription,
-            time: details.time
+            time: temporalDateString + 'T' + temporalTimeString
         }
 
         let res = await modifyById("incident", details.id, token, updDetails)
@@ -104,6 +109,34 @@ export const IncidentUpdPage = ({token})=> {
                                     )
                                 }
                             </select>
+                        </div>
+
+                        <div className="container">
+                            <div className="row">
+
+                                <div className="col-sm">
+                                    <div className="mb-3">
+                                        <label htmlFor="inputDate" className="form-label">Date</label>
+                                        <div>
+                                            <DatePicker defaultValue={dayjs(temporalDateString)} onChange={(date, dateString)=> {setTemporalDateString(dateString)}}/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm">
+                                    <div className="mb-3">
+                                        <label htmlFor="inputDate" className="form-label">Time</label>
+                                        <div>
+                                            <TimePicker defaultValue={dayjs(temporalTimeString, 'HH:mm:ss')} onChange={(time, timeString)=> {setTemporalTimeString(timeString)}}/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm">
+
+                                </div>
+                                <div className="col-sm">
+
+                                </div>
+                            </div>
                         </div>
 
                         <button type="submit" className="btn btn-dark" >Submit</button>

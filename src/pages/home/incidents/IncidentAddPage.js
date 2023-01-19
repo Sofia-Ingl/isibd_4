@@ -10,8 +10,10 @@ import dayjs from "dayjs";
 export const IncidentAddPage = ({token})=> {
 
     // time
-    // const [temporalTime, setTemporalTime] = useState('')
-    // const [temporalDate, setTemporalDate] = useState('')
+    // eslint-disable-next-line
+    const [temporalDateString, setTemporalDateString] = useState('2000-01-01')
+    // eslint-disable-next-line
+    const [temporalTimeString, setTemporalTimeString] = useState('00:00:00')
     const [temporalPlace, setTemporalPlace] = useState(null)
     const [temporalType, setTemporalType] = useState(null)
     const [temporalDescription, setTemporalDescription] = useState(null)
@@ -24,7 +26,7 @@ export const IncidentAddPage = ({token})=> {
             place: (temporalPlace==='') ? null : temporalPlace,
             type: (temporalType ==='') ? null : temporalType,
             description: (temporalDescription ==='') ? null : temporalDescription,
-            time: '2000-01-01 00:00:00'
+            time: temporalDateString + 'T' + temporalTimeString
         }
 
         await addEntity("incident", token, newIncident)
@@ -51,7 +53,7 @@ export const IncidentAddPage = ({token})=> {
                             <h3>Main data</h3>
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="inputPlace" className="form-label">Name</label>
+                            <label htmlFor="inputPlace" className="form-label">Place</label>
                             <input type="text"
                                    className="form-control"
                                    id="inputPlace"
@@ -60,7 +62,7 @@ export const IncidentAddPage = ({token})=> {
 
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="inputType" className="form-label">Alias</label>
+                            <label htmlFor="inputType" className="form-label">Type</label>
                             <input type="text"
                                    className="form-control"
                                    id="inputType"
@@ -70,7 +72,7 @@ export const IncidentAddPage = ({token})=> {
 
 
                         <div className="mb-3">
-                            <label htmlFor="inputDescription" className="form-label">Address</label>
+                            <label htmlFor="inputDescription" className="form-label">Description</label>
                             <textarea rows="2"
                                       className="form-control"
                                       id="inputDescription"
@@ -97,7 +99,7 @@ export const IncidentAddPage = ({token})=> {
                                     <div className="mb-3">
                                         <label htmlFor="inputDate" className="form-label">Date</label>
                                         <div>
-                                            <DatePicker placeholder="select date" />
+                                            <DatePicker defaultValue={dayjs('2000-01-01')} onChange={(date, dateString)=> {setTemporalDateString(dateString)}}/>
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +107,7 @@ export const IncidentAddPage = ({token})=> {
                                     <div className="mb-3">
                                         <label htmlFor="inputDate" className="form-label">Time</label>
                                         <div>
-                                            <TimePicker defaultOpenValue={dayjs('00:00:00', 'HH:mm:ss')} />
+                                            <TimePicker defaultValue={dayjs('00:00:00', 'HH:mm:ss')} onChange={(time, timeString)=> {setTemporalTimeString(timeString)}}/>
                                         </div>
                                     </div>
                                 </div>
