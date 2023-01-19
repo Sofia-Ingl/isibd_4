@@ -1,4 +1,6 @@
 import {NavLink} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {getAll} from "../../services/NetworkService";
 
 export const ArticleCard = ({info, last})=> {
     return (
@@ -28,6 +30,25 @@ export const ArticleUpdCard = ({info, last})=> {
     );
 }
 
-export const ArticlesList = ()=> {
+export const ArticlesList = ({token})=> {
 
+    const [articles, setArticles] = useState([])
+
+    const getAllArticles = async ()=> {
+        let lst = await getAll("article", token)
+        setArticles(lst)
+    }
+
+    useEffect(() => {
+        getAllArticles()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return (<div>
+        <div className="card-container overflow-auto p-4 border border-light border-3 rounded bg-dark">
+            {/*<div className="card-container p-4 rounded bg-dark">*/}
+            {articles.map((c, i) => <ArticleCard key={i} info={c} last={i === (articles.length - 1)}/>)}
+        </div>
+
+    </div>)
 }

@@ -15,6 +15,8 @@ import {OrganizationAddPage} from "./pages/home/organizations/OrganizationAddPag
 import {IncidentsList} from "./pages/home/incidents/IncidentsList";
 import {IncidentDetails} from "./pages/home/incidents/IncidentDetails";
 import {IncidentAddPage} from "./pages/home/incidents/IncidentAddPage";
+import {ArticlesList} from "./pages/home/articles/ArticlesList";
+import {ArticleDemoPage} from "./pages/home/articles/ArticleDemoPage";
 
 function App() {
 
@@ -50,6 +52,8 @@ function App() {
                     <Route path={'/incidents'} exact element={<IncidentsList token={token}/>}/>
                     <Route path={'/incidents/add'} exact element={<IncidentAddPage token={token}/>}/>
                     <Route path={'/incidents/:id'} exact element={<IncidentDetails token={token}/>}/>
+                    <Route path={'/articles'} exact element={<ArticlesList token={token}/>}/>
+                    <Route path={'/articles/:id'} exact element={<ArticleDemoPage token={token}/>}/>
                     <Route path="*" element={<Navigate from="*" to="/" /> } />
 
                 </Routes>

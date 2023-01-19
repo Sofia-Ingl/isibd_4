@@ -40,6 +40,9 @@ export const Navbar = ({setToken}) => {
                         <li className="nav-item">
                             <NavLink className="nav-link" to="/incidents">Incidents</NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/articles">Articles</NavLink>
+                        </li>
                     </ul>
                     <form className="d-flex" onSubmit={submitHandler}>
                        <button className="btn btn-outline-light" type="submit">Log out</button>
