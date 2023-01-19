@@ -1,8 +1,16 @@
 import React, {useContext, useEffect, useState} from "react";
 import {OrganizationPageContext} from "./OrganizationPageState";
-import {addRelationsById, deleteRelationsById, getAllExcept, modifyById} from "../../services/NetworkService";
-import {UpdAccordion} from "../UpdAccordion";
+import {
+    addRelationsById,
+    createRelatedEntities,
+    deleteRelationsById,
+    getAllExcept,
+    modifyById
+} from "../../services/NetworkService";
+import {AddWithAttachAccordion, AttachAccordion} from "../AttachAccordion";
 import {ActivityUpdCard} from "../activities/ActivitiesList";
+import {OrganizationMembershipUpdCard} from "./OrganizationDemoPage";
+import {PersonUpdCard} from "../people/PersonList";
 
 export const OrganizationUpdPage = ({token})=> {
 
@@ -18,10 +26,14 @@ export const OrganizationUpdPage = ({token})=> {
     const [temporalAccessLvl, setTemporalAccessLvl] = useState(details.accessLvl)
 
     const [potentialActivities, setPotentialActivities] = useState([])
+    const [potentialPeople, setPotentialPeople] = useState([])
+
+    let roles = []
 
     const [state, setState] = useState({
         membershipsToDelete : [],
         membershipsToAdd : [],
+        newMemberships : [],
         activitiesToDelete : [],
         activitiesToAdd : [],
     })
@@ -66,6 +78,23 @@ export const OrganizationUpdPage = ({token})=> {
             await addRelationsById("organization", "activities", details.id, token, state.activitiesToAdd)
         }
 
+        if (state.membershipsToDelete.length !== 0) {
+            console.log(state.membershipsToDelete)
+            await deleteRelationsById("organization", "memberships", details.id, token, state.membershipsToDelete)
+        }
+        if (state.membershipsToAdd.length !== 0) {
+            for (let i = 0; i < state.membershipsToAdd.length; i++) {
+                state.newMemberships.push({
+                        personId: state.membershipsToAdd[i],
+                        organizationId: details.id,
+                        memberRole: roles[i]
+                    }
+                )
+            }
+            console.log(state.newMemberships)
+            await createRelatedEntities("organization", "memberships", details.id, token, state.newMemberships)
+        }
+
         setDetails(res)
         setUpdMode(false)
 
@@ -85,6 +114,14 @@ export const OrganizationUpdPage = ({token})=> {
         }
     }
 
+    const getAllExceptPeople = async ()=> {
+        if (potentialPeople.length === 0) {
+            let people = memberships.map(mem => {return {id: mem.personId}})
+            let lst = await getAllExcept("person", token, people)
+            setPotentialPeople(lst)
+        }
+    }
+
     const dealActivitiessDeleteLst = (checkbox)=> {
         let activityId = parseInt(checkbox.value)
         if (checkbox.checked) {
@@ -100,6 +137,38 @@ export const OrganizationUpdPage = ({token})=> {
             state.activitiesToAdd = state.activitiesToAdd.filter(item => { return item !== activityId})
         } else {
             state.activitiesToAdd.push(activityId)
+        }
+    }
+
+    const dealMembershipsDeleteLst = (checkbox)=> {
+        let mId = parseInt(checkbox.value)
+        if (checkbox.checked) {
+            state.membershipsToDelete = state.membershipsToDelete.filter(item => { return item !== mId})
+        } else {
+            state.membershipsToDelete.push(mId)
+        }
+    }
+
+    // const dealMembershipsAddLst = (checkbox, role)=> {
+    //     let pId = parseInt(checkbox.value)
+    //     if (checkbox.checked) {
+    //         state.newMemberships.push({
+    //             organizationId: details.id,
+    //             personId: pId,
+    //             memberRole: role
+    //         })
+    //     } else {
+    //         state.newMemberships = state.newMemberships.filter(item => { return item.personId !== pId})
+    //     }
+    //     console.log(state.newMemberships)
+    // }
+
+    const dealMembershipsAddLst = (checkbox)=> {
+        let oId = parseInt(checkbox.value)
+        if (checkbox.checked) {
+            state.membershipsToAdd.push(oId)
+        } else {
+            state.membershipsToAdd = state.membershipsToAdd.filter(item => { return item !== oId})
         }
     }
 
@@ -158,7 +227,7 @@ export const OrganizationUpdPage = ({token})=> {
                             <h3>Details</h3>
                         </div>
 
-                        <UpdAccordion
+                        <AttachAccordion
                             entityName={"Activities"}
                             entityLst={activities}
                             potentialEntities={potentialActivities}
@@ -167,6 +236,19 @@ export const OrganizationUpdPage = ({token})=> {
                             getAllExceptEntities={getAllExceptActivities}
                             networkWrapper={networkWrapper}
                             EntityCard={ActivityUpdCard}
+                        />
+
+                        <AddWithAttachAccordion
+                            entityName={"Memberships"}
+                            entityLst={memberships}
+                            potentialBasicEntities={potentialPeople}
+                            dealEntityDeleteLstFunc={dealMembershipsDeleteLst}
+                            getAllExceptBasicEntities={getAllExceptPeople}
+                            networkWrapper={networkWrapper}
+                            EntityCard={OrganizationMembershipUpdCard}
+                            BasicEntityCard={PersonUpdCard}
+                            dealEntityAddLstFunc={dealMembershipsAddLst}
+                            extraDataLst={roles}
                         />
 
                         <button type="submit" className="btn btn-dark" >Submit</button>

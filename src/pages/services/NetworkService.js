@@ -212,3 +212,31 @@ export const addEntity = async (objType, token, newEntity) => {
     }
     return null
 }
+
+
+export const createRelatedEntities = async (objType, relatedObjType, id, token, newEntitiesLst) => {
+    try {
+        console.log(token)
+        const response = await axios.post(
+            `${BASIC_URL}/api/${objType}/${id}/${relatedObjType}/add_new`,
+            newEntitiesLst,
+            {
+                headers: { "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`}
+            }
+        );
+        console.log(response);
+        return response.data
+        //token.current = response.data.token
+
+    } catch (err) {
+        if (!err?.response) {
+            console.log("No Server Response");
+        } else {
+            console.log("Fail");
+            console.log(err.response?.status);
+            console.log(err.response);
+        }
+    }
+    return null
+}

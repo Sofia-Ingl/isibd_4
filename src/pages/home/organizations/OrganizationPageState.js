@@ -22,6 +22,9 @@ export const OrganizationPageState = ({children, token, id})=> {
     const fetchOrganizationMemberships = async ()=> {
 
         let lst = await getRelationsById("organization", id, "memberships", token)
+        for (let i = 0; i < lst.length; i++) {
+            lst[i].id = lst[i].personId
+        }
         setMemberships(lst)
 
 

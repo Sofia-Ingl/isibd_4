@@ -3,9 +3,10 @@ import React from 'react';
 export const MainComponent = () => {
 
 
+
     return (
-        <h3>
+        <div>
             Main
-        </h3>
+        </div>
     );
 }

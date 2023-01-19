@@ -17,6 +17,17 @@ export const PersonMembershipCard = ({info, last})=> {
     );
 }
 
+export const PersonMembershipUpdCard = ({info, last})=> {
+    return (
+        <div className={`card ${(last === false)? "mb-4":""}`}>
+            <div className="card-body">
+                <h5 className="card-title">{info.organizationName} </h5>
+                <p className="card-text text-truncate">Role: {info.memberRole}</p>
+            </div>
+        </div>
+    );
+}
+
 export const PersonDemoPage = ()=> {
     const {details, setUpdMode,
         memberships, fetchPersonMemberships,

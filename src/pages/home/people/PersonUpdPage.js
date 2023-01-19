@@ -1,8 +1,16 @@
 import React, {useContext, useEffect, useState} from "react";
 import {PersonPageContext} from "./PersonPageState";
-import {addRelationsById, deleteRelationsById, getAllExcept, modifyById} from "../../services/NetworkService";
-import {UpdAccordion} from "../UpdAccordion";
+import {
+    addRelationsById,
+    createRelatedEntities,
+    deleteRelationsById,
+    getAllExcept,
+    modifyById
+} from "../../services/NetworkService";
+import {AddWithAttachAccordion, AttachAccordion} from "../AttachAccordion";
 import {ActivityUpdCard} from "../activities/ActivitiesList";
+import {PersonMembershipUpdCard} from "./PersonDemoPage";
+import {OrganizationUpdCard} from "../organizations/OrganizationsList";
 
 export const PersonUpdPage = ({token})=> {
 
@@ -25,6 +33,10 @@ export const PersonUpdPage = ({token})=> {
     const [temporalAccessLvl, setTemporalAccessLvl] = useState(details.accessLvl)
 
     const [potentialActivities, setPotentialActivities] = useState([])
+    // eslint-disable-next-line
+    const [potentialOrgs, setPotentialOrgs] = useState([])
+    let roles = []
+
     // const [potentialWitnessCases, setPotentialWitnessCases] = useState([])
     // const [potentialCases, setPotentialCases] = useState([])
     // const [potentialIncidents, setPotentialIncidents] = useState([])
@@ -32,6 +44,7 @@ export const PersonUpdPage = ({token})=> {
     const [state, setState] = useState({
         membershipsToDelete : [],
         membershipsToAdd : [],
+        newMemberships : [],
         activitiesToDelete : [],
         activitiesToAdd : [],
     })
@@ -86,6 +99,24 @@ export const PersonUpdPage = ({token})=> {
             await addRelationsById("person", "activities", details.id, token, state.activitiesToAdd)
         }
 
+        if (state.membershipsToDelete.length !== 0) {
+            console.log(state.membershipsToDelete)
+            await deleteRelationsById("person", "memberships", details.id, token, state.membershipsToDelete)
+        }
+        if (state.membershipsToAdd.length !== 0) {
+            for (let i = 0; i < state.membershipsToAdd.length; i++) {
+                state.newMemberships.push({
+                      organizationId: state.membershipsToAdd[i],
+                      personId: details.id,
+                      memberRole: roles[i]
+                }
+                )
+            }
+
+            console.log(state.newMemberships)
+            await createRelatedEntities("person", "memberships", details.id, token, state.newMemberships)
+        }
+
         setDetails(res)
         setUpdMode(false)
 
@@ -105,7 +136,18 @@ export const PersonUpdPage = ({token})=> {
         }
     }
 
-    const dealActivitiessDeleteLst = (checkbox)=> {
+    const getAllExceptOrgs = async ()=> {
+        if (potentialOrgs.length === 0) {
+            let orgs = memberships.map(mem => {return {id: mem.organizationId}})
+            let lst = await getAllExcept("organization", token, orgs)
+            setPotentialOrgs(lst)
+            for (let i = 0; i < potentialOrgs.length; i++) {
+                roles.push('')
+            }
+        }
+    }
+
+    const dealActivitiesDeleteLst = (checkbox)=> {
         let activityId = parseInt(checkbox.value)
         if (checkbox.checked) {
             state.activitiesToDelete = state.activitiesToDelete.filter(item => { return item !== activityId})
@@ -120,6 +162,39 @@ export const PersonUpdPage = ({token})=> {
             state.activitiesToAdd = state.activitiesToAdd.filter(item => { return item !== activityId})
         } else {
             state.activitiesToAdd.push(activityId)
+        }
+    }
+
+
+    const dealMembershipsDeleteLst = (checkbox)=> {
+        let mId = parseInt(checkbox.value)
+        if (checkbox.checked) {
+            state.membershipsToDelete = state.membershipsToDelete.filter(item => { return item !== mId})
+        } else {
+            state.membershipsToDelete.push(mId)
+        }
+    }
+
+    // const dealMembershipsAddLst = (checkbox, role)=> {
+    //     let oId = parseInt(checkbox.value)
+    //     if (checkbox.checked) {
+    //         state.newMemberships.push({
+    //             organizationId: oId,
+    //             personId: details.id,
+    //             memberRole: role
+    //         })
+    //     } else {
+    //         state.newMemberships = state.newMemberships.filter(item => { return item.organizationId !== oId})
+    //     }
+    //     console.log(state.newMemberships)
+    // }
+
+    const dealMembershipsAddLst = (checkbox)=> {
+        let oId = parseInt(checkbox.value)
+        if (checkbox.checked) {
+            state.membershipsToAdd.push(oId)
+        } else {
+            state.membershipsToAdd = state.membershipsToAdd.filter(item => { return item !== oId})
         }
     }
 
@@ -239,15 +314,29 @@ export const PersonUpdPage = ({token})=> {
                             <h3>Details</h3>
                         </div>
 
-                        <UpdAccordion
+                        <AttachAccordion
                             entityName={"Activities"}
                             entityLst={activities}
                             potentialEntities={potentialActivities}
                             dealEntityAddLstFunc={dealActivitiesAddLst}
-                            dealEntityDeleteLstFunc={dealActivitiessDeleteLst}
+                            dealEntityDeleteLstFunc={dealActivitiesDeleteLst}
                             getAllExceptEntities={getAllExceptActivities}
                             networkWrapper={networkWrapper}
                             EntityCard={ActivityUpdCard}
+                        />
+
+
+                        <AddWithAttachAccordion
+                            entityName={"Memberships"}
+                            entityLst={memberships}
+                            potentialBasicEntities={potentialOrgs}
+                            dealEntityDeleteLstFunc={dealMembershipsDeleteLst}
+                            getAllExceptBasicEntities={getAllExceptOrgs}
+                            networkWrapper={networkWrapper}
+                            EntityCard={PersonMembershipUpdCard}
+                            BasicEntityCard={OrganizationUpdCard}
+                            dealEntityAddLstFunc={dealMembershipsAddLst}
+                            extraDataLst={roles}
                         />
 
                         <button type="submit" className="btn btn-dark" >Submit</button>

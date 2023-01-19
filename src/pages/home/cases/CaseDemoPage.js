@@ -136,8 +136,6 @@ export const CaseDemoPage = ()=> {
                 </div>
 
 
-
-
             </div>
         </div>
     )

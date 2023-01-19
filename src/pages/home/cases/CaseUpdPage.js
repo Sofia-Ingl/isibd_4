@@ -1,17 +1,26 @@
 import React, {useContext, useEffect, useState} from "react";
 import {CasePageContext} from "./CasePageState";
 import {PersonUpdCard} from "../people/PersonList";
-import {addRelationsById, deleteRelationsById, getAllExcept, modifyById} from "../../services/NetworkService";
+import {
+    addRelationsById, createRelatedEntities,
+    // createRelatedEntities,
+    deleteRelationsById,
+    getAllExcept,
+    modifyById
+} from "../../services/NetworkService";
 import {OrganizationUpdCard} from "../organizations/OrganizationsList";
 import {IncidentUpdCard} from "../incidents/IncidentsList";
 import {ArticleUpdCard} from "../articles/ArticlesList";
-import {UpdAccordion} from "../UpdAccordion";
+import {AddAccordion, AttachAccordion} from "../AttachAccordion";
+import {EvidenceAddForm} from "./EvidenceAddForm";
+import {EvidenceCard} from "./EvidenceCard";
 
 export const CaseUpdPage = ({token})=> {
 
     const {details, setDetails, setUpdMode, participants, fetchCaseParticipants,
         witnesses, fetchCaseWitnesses, orgs, fetchCaseOrganizations,
-        incidents, fetchCaseIncidents, articles, fetchCaseArticles} = useContext(CasePageContext)
+        incidents, fetchCaseIncidents, articles, fetchCaseArticles,
+        evidences, fetchCaseEvidences} = useContext(CasePageContext)
 
     const [temporalName, setTemporalName] = useState(details.name)
     const [temporalDescription, setTemporalDescription] = useState(details.description)
@@ -25,6 +34,9 @@ export const CaseUpdPage = ({token})=> {
     const [potentialIncidents, setPotentialIncidents] = useState([])
     const [potentialArticles, setPotentialArticles] = useState([])
 
+    // eslint-disable-next-line
+    const [evidencesUpd, setEvidencesUpd] = useState(false)
+
     const [state, setState] = useState({
         participantsToDelete : [],
         participantsToAdd : [],
@@ -35,7 +47,9 @@ export const CaseUpdPage = ({token})=> {
         incidentsToDelete : [],
         incidentsToAdd : [],
         articlesToDelete : [],
-        articlesToAdd : []
+        articlesToAdd : [],
+        evidencesToDelete: [],
+        newEvidences: []
     })
 
 
@@ -60,12 +74,17 @@ export const CaseUpdPage = ({token})=> {
             fetchCaseArticles()
         }
 
+        if (evidences.length === 0) {
+            fetchCaseEvidences()
+        }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const showCase = ()=> {
         setUpdMode(false)
     }
+
 
 
     const submitHandler = async (event) => {
@@ -115,6 +134,14 @@ export const CaseUpdPage = ({token})=> {
             await addRelationsById("case", "articles", details.id, token, state.articlesToAdd)
         }
 
+        if (state.newEvidences.length !== 0) {
+            await createRelatedEntities("case", "evidences", details.id, token, state.newEvidences)
+        }
+
+        if (state.evidencesToDelete.length !== 0) {
+            await deleteRelationsById("case", "evidences", details.id, token, state.evidencesToDelete)
+        }
+
         setDetails(res)
         setUpdMode(false)
 
@@ -162,6 +189,27 @@ export const CaseUpdPage = ({token})=> {
         if (potentialArticles.length === 0) {
             let lst = await getAllExcept("article", token, articles)
             setPotentialArticles(lst)
+        }
+    }
+
+    const addNewEvidence = (evidence) => {
+
+        evidence.caseId = details.id
+        evidence.pseudoId = state.newEvidences.length
+        state.newEvidences.push(evidence)
+        setEvidencesUpd(!evidencesUpd)
+    }
+
+    // const deleteEvidence = (evidence) => {
+    //    state.newEvidences.filter(item => { return item.pseudoId !== evidence.pseudoId})
+    // }
+
+    const dealEvidencesDeleteLst = (checkbox)=> {
+        let evidenceId = parseInt(checkbox.value)
+        if (checkbox.checked) {
+            state.evidencesToDelete = state.evidencesToDelete.filter(item => { return item !== evidenceId})
+        } else {
+            state.evidencesToDelete.push(evidenceId)
         }
     }
 
@@ -321,7 +369,7 @@ export const CaseUpdPage = ({token})=> {
                             <h3>Details</h3>
                         </div>
 
-                        <UpdAccordion
+                        <AttachAccordion
                             entityName={"Participants"}
                             entityLst={participants}
                             potentialEntities={potentialParticipants}
@@ -332,7 +380,7 @@ export const CaseUpdPage = ({token})=> {
                             EntityCard={PersonUpdCard}
                         />
 
-                        <UpdAccordion
+                        <AttachAccordion
                             entityName={"Witnesses"}
                             entityLst={witnesses}
                             potentialEntities={potentialWitnesses}
@@ -343,7 +391,7 @@ export const CaseUpdPage = ({token})=> {
                             EntityCard={PersonUpdCard}
                         />
 
-                        <UpdAccordion
+                        <AttachAccordion
                             entityName={"Organizations"}
                             entityLst={orgs}
                             potentialEntities={potentialOrgs}
@@ -354,7 +402,7 @@ export const CaseUpdPage = ({token})=> {
                             EntityCard={OrganizationUpdCard}
                         />
 
-                        <UpdAccordion
+                        <AttachAccordion
                             entityName={"Incidents"}
                             entityLst={incidents}
                             potentialEntities={potentialIncidents}
@@ -365,7 +413,7 @@ export const CaseUpdPage = ({token})=> {
                             EntityCard={IncidentUpdCard}
                         />
 
-                        <UpdAccordion
+                        <AttachAccordion
                             entityName={"Articles"}
                             entityLst={articles}
                             potentialEntities={potentialArticles}
@@ -374,6 +422,17 @@ export const CaseUpdPage = ({token})=> {
                             getAllExceptEntities={getAllExceptArticles}
                             networkWrapper={networkWrapper}
                             EntityCard={ArticleUpdCard}
+                        />
+
+
+                        <AddAccordion
+                            entityName={"Evidences"}
+                            entityLst={evidences}
+                            dealEntityDeleteLstFunc={dealEvidencesDeleteLst}
+                            EntityCard={EvidenceCard}
+                            EntityForm={EvidenceAddForm}
+                            manageNewEntitiesLstFunc={addNewEvidence}
+                            newEntitiesLst={state.newEvidences}
                         />
 
 
