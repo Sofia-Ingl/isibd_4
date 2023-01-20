@@ -1,15 +1,16 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {addEntity} from "../../services/NetworkService";
 import {NavLink} from "react-router-dom";
 import {DatePicker, TimePicker} from 'antd';
 import dayjs from "dayjs";
+import {AlertContext} from "../../alerts/AlertState";
 // import { TimePicker } from 'antd';
 // import dayjs from 'dayjs';
 
 
 export const IncidentAddPage = ({token})=> {
 
-    // time
+    const {setHidden, setMessage} = useContext(AlertContext)
     // eslint-disable-next-line
     const [temporalDateString, setTemporalDateString] = useState('2000-01-01')
     // eslint-disable-next-line
@@ -28,9 +29,15 @@ export const IncidentAddPage = ({token})=> {
             description: (temporalDescription ==='') ? null : temporalDescription,
             time: temporalDateString + 'T' + temporalTimeString
         }
+        if (newIncident.description === null) {
+            setMessage('Description cannot be null!')
+            setHidden(false)
+        } else {
+            await addEntity("incident", token, newIncident)
+            window.location = "/incidents"
+        }
 
-        await addEntity("incident", token, newIncident)
-        window.location = "/incidents"
+
 
     }
 

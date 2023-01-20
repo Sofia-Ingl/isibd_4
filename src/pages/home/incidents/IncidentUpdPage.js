@@ -3,6 +3,7 @@ import {IncidentPageContext} from "./IncidentPageState";
 import {modifyById} from "../../services/NetworkService";
 import {DatePicker, TimePicker} from "antd";
 import dayjs from "dayjs";
+import {AlertContext} from "../../alerts/AlertState";
 
 
 export const IncidentUpdPage = ({token})=> {
@@ -11,6 +12,7 @@ export const IncidentUpdPage = ({token})=> {
         cases, fetchIncidentCases,
     } = useContext(IncidentPageContext)
 
+    const {setHidden, setMessage} = useContext(AlertContext)
 
     // time
     const [temporalDateString, setTemporalDateString] = useState(details.time.split('T')[0])
@@ -46,10 +48,17 @@ export const IncidentUpdPage = ({token})=> {
             time: temporalDateString + 'T' + temporalTimeString
         }
 
-        let res = await modifyById("incident", details.id, token, updDetails)
+        if (updDetails.description === null) {
+            setMessage('Description cannot be null!')
+            setHidden(false)
+        } else {
+            let res = await modifyById("incident", details.id, token, updDetails)
 
-        setDetails(res)
-        setUpdMode(false)
+            setDetails(res)
+            setUpdMode(false)
+        }
+
+
 
     }
 
@@ -91,7 +100,7 @@ export const IncidentUpdPage = ({token})=> {
 
 
                         <div className="mb-3">
-                            <label htmlFor="inputDescription" className="form-label">Address</label>
+                            <label htmlFor="inputDescription" className="form-label">Description</label>
                             <textarea rows="2"
                                       className="form-control"
                                       id="inputDescription"

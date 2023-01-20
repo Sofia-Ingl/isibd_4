@@ -1,8 +1,11 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {NavLink} from "react-router-dom";
 import {addEntity} from "../../services/NetworkService";
+import {AlertContext} from "../../alerts/AlertState";
 
 export const CaseAddPage = ({token})=> {
+
+    const {setHidden, setMessage} = useContext(AlertContext)
 
     const [accessLvl, setAccessLvl] = useState("0")
     const [temporalName, setTemporalName] = useState("")
@@ -12,15 +15,21 @@ export const CaseAddPage = ({token})=> {
         event.preventDefault()
 
         let newCase = {
-            name: temporalName,
+            name: (temporalName === '')||(temporalName === undefined) ?null:temporalName,
             description: temporalDescription,
             accessLvl: accessLvl,
             completeness: 'открыто',
             initResponsibleEmployeeId: window.localStorage.getItem('employee_id')
         }
 
-        await addEntity("case", token, newCase)
-        window.location = '/cases'
+        if (newCase.name === null) {
+            setMessage('Case name cannot be null!')
+            setHidden(false)
+        } else {
+            await addEntity("case", token, newCase)
+            window.location = '/cases'
+        }
+
     }
     return (
     <div className="container px-5">

@@ -11,8 +11,11 @@ import {AddWithAttachAccordion, AttachAccordion} from "../AttachAccordion";
 import {ActivityUpdCard} from "../activities/ActivitiesList";
 import {OrganizationMembershipUpdCard} from "./OrganizationDemoPage";
 import {PersonUpdCard} from "../people/PersonList";
+import {AlertContext} from "../../alerts/AlertState";
 
 export const OrganizationUpdPage = ({token})=> {
+
+    const {setHidden, setMessage} = useContext(AlertContext)
 
     const {details, setDetails, setUpdMode,
         memberships, fetchOrganizationMemberships,
@@ -69,34 +72,41 @@ export const OrganizationUpdPage = ({token})=> {
             address: (temporalAddress ==='') ? null : temporalAddress
         }
 
-        let res = await modifyById("organization", details.id, token, updDetails)
+        if (updDetails.name === null) {
+            setMessage('Organization name cannot be null!')
+            setHidden(false)
+        } else {
+            let res = await modifyById("organization", details.id, token, updDetails)
 
-        if (state.activitiesToDelete.length !== 0) {
-            await deleteRelationsById("organization", "activities", details.id, token, state.activitiesToDelete)
-        }
-        if (state.activitiesToAdd.length !== 0) {
-            await addRelationsById("organization", "activities", details.id, token, state.activitiesToAdd)
-        }
-
-        if (state.membershipsToDelete.length !== 0) {
-            console.log(state.membershipsToDelete)
-            await deleteRelationsById("organization", "memberships", details.id, token, state.membershipsToDelete)
-        }
-        if (state.membershipsToAdd.length !== 0) {
-            for (let i = 0; i < state.membershipsToAdd.length; i++) {
-                state.newMemberships.push({
-                        personId: state.membershipsToAdd[i],
-                        organizationId: details.id,
-                        memberRole: roles[i]
-                    }
-                )
+            if (state.activitiesToDelete.length !== 0) {
+                await deleteRelationsById("organization", "activities", details.id, token, state.activitiesToDelete)
             }
-            console.log(state.newMemberships)
-            await createRelatedEntities("organization", "memberships", details.id, token, state.newMemberships)
+            if (state.activitiesToAdd.length !== 0) {
+                await addRelationsById("organization", "activities", details.id, token, state.activitiesToAdd)
+            }
+
+            if (state.membershipsToDelete.length !== 0) {
+                console.log(state.membershipsToDelete)
+                await deleteRelationsById("organization", "memberships", details.id, token, state.membershipsToDelete)
+            }
+            if (state.membershipsToAdd.length !== 0) {
+                for (let i = 0; i < state.membershipsToAdd.length; i++) {
+                    state.newMemberships.push({
+                            personId: state.membershipsToAdd[i],
+                            organizationId: details.id,
+                            memberRole: roles[i]
+                        }
+                    )
+                }
+                console.log(state.newMemberships)
+                await createRelatedEntities("organization", "memberships", details.id, token, state.newMemberships)
+            }
+
+            setDetails(res)
+            setUpdMode(false)
         }
 
-        setDetails(res)
-        setUpdMode(false)
+
 
     }
 

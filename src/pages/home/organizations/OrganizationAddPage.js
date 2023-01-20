@@ -1,8 +1,12 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {addEntity} from "../../services/NetworkService";
 import {NavLink} from "react-router-dom";
+import {AlertContext} from "../../alerts/AlertState";
 
 export const OrganizationAddPage = ({token})=> {
+
+    const {setHidden, setMessage} = useContext(AlertContext)
+
     const [temporalName, setTemporalName] = useState(null)
     const [temporalAddress, setTemporalAddress] = useState(null)
     const [temporalAccessLvl, setTemporalAccessLvl] = useState(0)
@@ -16,8 +20,14 @@ export const OrganizationAddPage = ({token})=> {
             address: (temporalAddress ==='') ? null : temporalAddress
         }
 
-        await addEntity("organization", token, newOrganization)
-        window.location = '/organizations'
+        if (newOrganization.name === null) {
+            setMessage('Organization name cannot be null!')
+            setHidden(false)
+        } else {
+            await addEntity("organization", token, newOrganization)
+            window.location = '/organizations'
+        }
+
     }
 
     return (

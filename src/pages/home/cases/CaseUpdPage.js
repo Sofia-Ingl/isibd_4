@@ -14,8 +14,11 @@ import {ArticleUpdCard} from "../articles/ArticlesList";
 import {AddAccordion, AttachAccordion} from "../AttachAccordion";
 import {EvidenceAddForm} from "./EvidenceAddForm";
 import {EvidenceCard} from "./EvidenceCard";
+import {AlertContext} from "../../alerts/AlertState";
 
 export const CaseUpdPage = ({token})=> {
+
+    const {setHidden, setMessage} = useContext(AlertContext)
 
     const {details, setDetails, setUpdMode, participants, fetchCaseParticipants,
         witnesses, fetchCaseWitnesses, orgs, fetchCaseOrganizations,
@@ -92,58 +95,65 @@ export const CaseUpdPage = ({token})=> {
         let updDetails = {
             id: details.id,
             accessLvl: temporalAccessLvl,
-            name: temporalName,
+            name: (temporalName === '')||(temporalName === undefined) ?null:temporalName,
             description: (temporalDescription ==='') ? null : temporalDescription,
             completeness: temporalCompleteness
         }
 
-        let res = await modifyById("case", details.id, token, updDetails)
+        if (updDetails.name === null) {
+            setMessage('Case name cannot be null!')
+            setHidden(false)
+        } else {
+            let res = await modifyById("case", details.id, token, updDetails)
 
-        if (state.participantsToDelete.length !== 0) {
-            await deleteRelationsById("case", "participants", details.id, token, state.participantsToDelete)
-        }
-        if (state.participantsToAdd.length !== 0) {
-            await addRelationsById("case", "participants", details.id, token, state.participantsToAdd)
+            if (state.participantsToDelete.length !== 0) {
+                await deleteRelationsById("case", "participants", details.id, token, state.participantsToDelete)
+            }
+            if (state.participantsToAdd.length !== 0) {
+                await addRelationsById("case", "participants", details.id, token, state.participantsToAdd)
+            }
+
+            if (state.witnessesToDelete.length !== 0) {
+                await deleteRelationsById("case", "witnesses", details.id, token, state.witnessesToDelete)
+            }
+            if (state.witnessesToAdd.length !== 0) {
+                await addRelationsById("case", "witnesses", details.id, token, state.witnessesToAdd)
+            }
+
+            if (state.orgsToDelete.length !== 0) {
+                await deleteRelationsById("case", "organizations", details.id, token, state.orgsToDelete)
+            }
+            if (state.orgsToAdd.length !== 0) {
+                await addRelationsById("case", "organizations", details.id, token, state.orgsToAdd)
+            }
+
+            if (state.incidentsToDelete.length !== 0) {
+                await deleteRelationsById("case", "incidents", details.id, token, state.incidentsToDelete)
+            }
+            if (state.incidentsToAdd.length !== 0) {
+                await addRelationsById("case", "incidents", details.id, token, state.incidentsToAdd)
+            }
+
+            if (state.articlesToDelete.length !== 0) {
+                await deleteRelationsById("case", "articles", details.id, token, state.articlesToDelete)
+            }
+            if (state.articlesToAdd.length !== 0) {
+                await addRelationsById("case", "articles", details.id, token, state.articlesToAdd)
+            }
+
+            if (state.newEvidences.length !== 0) {
+                await createRelatedEntities("case", "evidences", details.id, token, state.newEvidences)
+            }
+
+            if (state.evidencesToDelete.length !== 0) {
+                await deleteRelationsById("case", "evidences", details.id, token, state.evidencesToDelete)
+            }
+
+            setDetails(res)
+            setUpdMode(false)
         }
 
-        if (state.witnessesToDelete.length !== 0) {
-            await deleteRelationsById("case", "witnesses", details.id, token, state.witnessesToDelete)
-        }
-        if (state.witnessesToAdd.length !== 0) {
-            await addRelationsById("case", "witnesses", details.id, token, state.witnessesToAdd)
-        }
 
-        if (state.orgsToDelete.length !== 0) {
-            await deleteRelationsById("case", "organizations", details.id, token, state.orgsToDelete)
-        }
-        if (state.orgsToAdd.length !== 0) {
-            await addRelationsById("case", "organizations", details.id, token, state.orgsToAdd)
-        }
-
-        if (state.incidentsToDelete.length !== 0) {
-            await deleteRelationsById("case", "incidents", details.id, token, state.incidentsToDelete)
-        }
-        if (state.incidentsToAdd.length !== 0) {
-            await addRelationsById("case", "incidents", details.id, token, state.incidentsToAdd)
-        }
-
-        if (state.articlesToDelete.length !== 0) {
-            await deleteRelationsById("case", "articles", details.id, token, state.articlesToDelete)
-        }
-        if (state.articlesToAdd.length !== 0) {
-            await addRelationsById("case", "articles", details.id, token, state.articlesToAdd)
-        }
-
-        if (state.newEvidences.length !== 0) {
-            await createRelatedEntities("case", "evidences", details.id, token, state.newEvidences)
-        }
-
-        if (state.evidencesToDelete.length !== 0) {
-            await deleteRelationsById("case", "evidences", details.id, token, state.evidencesToDelete)
-        }
-
-        setDetails(res)
-        setUpdMode(false)
 
     }
 
